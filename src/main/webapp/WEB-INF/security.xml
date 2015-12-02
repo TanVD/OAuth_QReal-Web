@@ -6,26 +6,32 @@
                  http://www.springframework.org/schema/security
                  http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <beans:bean id="userService" class="com.resources.auth.database.UserDAO">
+    <beans:bean id="userService" class="com.resources.auth.database.Users.UserDAO">
         <beans:property name="sessionFactory" ref="sessionFactory"/>
     </beans:bean>
-    <beans:bean id="userServiceSec" class="com.resources.auth.database.UserDAOSec" >
+    <beans:bean id="userServiceSec" class="com.resources.auth.database.Users.UserDAOSec" >
         <beans:property name="userService" ref="userService" />
     </beans:bean>
-
+    <beans:bean id="eventListenerBean" class="com.resources.auth.AppInit" />
 
     <!-- enable use-expressions -->
-    <http auto-config="true" use-expressions="true">
-        <intercept-url pattern="/table" access="hasRole('ROLE_USER')" />
-
+    <http use-expressions="true">
+        <intercept-url pattern="/tableRegistered*" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/servers*" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/userServers*" access="hasRole('ROLE_USER')" />
         <form-login
                 login-page="/"
-                default-target-url="/table"
                 authentication-failure-url="/logErr"
                 username-parameter="username"
-                password-parameter="password" />
+                password-parameter="password"
+                authentication-success-handler-ref="myAuthenticationSuccessHandler"
+                />
         <csrf disabled="true" />
     </http>
+
+
+    <beans:bean id="myAuthenticationSuccessHandler"
+                class="com.resources.auth.Security.standardAuthenticationSuccessHandler" />
 
     <authentication-manager>
         <authentication-provider user-service-ref="userServiceSec" >

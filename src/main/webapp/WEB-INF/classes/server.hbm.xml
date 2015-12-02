@@ -4,13 +4,11 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="com.resources.auth.database.Users.User" table="PERSON">
+    <class name="com.resources.auth.database.Server.Server" table="SERVERS">
         <id column="ID" name="id" >
             <generator class="increment"/>
         </id>
-        <property name="username" column="LOGIN"/>
-        <property name="password" column="PASSWORD"/>
-        <property name="authority" column="AUTHORITIES"/>
+        <property name="ip" column="IP"/>
+        <property name="format" column="FORMAT"/>
     </class>
 </hibernate-mapping>
-

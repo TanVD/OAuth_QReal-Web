@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <title>Login</title>
+    <title>Registration</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
@@ -53,8 +53,11 @@
 
                     </div>
                     <div class="form-group col-lg-6">
-                        <c:if test="${error}">
+                        <c:if test="${errorPasswordsNotMatch}">
                             <h2 class="text-right login-title">Passwords not match</h2>
+                        </c:if>
+                        <c:if test="${errorLoginAlreadyRegistered}">
+                            <h2 class="text-right login-title">Login already registered</h2>
                         </c:if>
                     </div>
                 </div>

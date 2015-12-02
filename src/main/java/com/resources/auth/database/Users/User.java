@@ -1,17 +1,12 @@
-package com.resources.auth.database;
+package com.resources.auth.database.Users;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.font.GraphicAttribute;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.*;
 
 /**
  * Created by tanvd on 07.11.15.
@@ -25,7 +20,26 @@ public class User implements Serializable, UserDetails {
 
     private String password;
 
-    private Collection<GrantedAuthority> authority;
+    private String authority;
+
+    private Set<GrantedAuthority> convertStringToSet(String authority)
+    {
+        Set<GrantedAuthority> userRoles = new HashSet<GrantedAuthority>();
+        for (String str : authority.split("\\s+")) {
+            userRoles.add(new UserAuthority(str));
+        }
+        return userRoles;
+    }
+
+    private String convertSetToString(Collection<GrantedAuthority> userAuthorities)
+    {
+        String userRoles = new String();
+        for (GrantedAuthority auth : userAuthorities)
+        {
+            userRoles += auth.getAuthority() + " ";
+        }
+        return userRoles;
+    }
 
     public User(){
         idInc += 1;
@@ -36,15 +50,24 @@ public class User implements Serializable, UserDetails {
         this.id = idInc;
         this.username = username;
         this.password = password;
+        this.authority = convertSetToString(authority);
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+
         this.authority = authority;
     }
 
     public Collection<GrantedAuthority> getAuthorities(){
-        return authority;
+        return convertStringToSet(authority);
     }
 
     public void setAuthorities(Collection<GrantedAuthority> authority) {
-        this.authority = authority;
+        this.authority = convertSetToString(authority);
     }
 
     public Integer getId() {
@@ -85,6 +108,10 @@ public class User implements Serializable, UserDetails {
 
     public boolean isAccountNonLocked() {
         return true;
+    }
+
+    public boolean isAdmin() {
+        return authority.contains("ROLE_ADMIN");
     }
 }
 

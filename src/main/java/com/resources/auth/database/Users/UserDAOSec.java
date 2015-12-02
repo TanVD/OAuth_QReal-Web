@@ -1,9 +1,5 @@
-package com.resources.auth.database;
+package com.resources.auth.database.Users;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,13 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import java.util.List;
-
 /**
  * Created by tanvd on 08.11.15.
  */
 @Service("userServiceSec")
+@Transactional
 public class UserDAOSec implements UserDetailsService{
 
 

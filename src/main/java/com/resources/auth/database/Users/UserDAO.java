@@ -1,7 +1,8 @@
-package com.resources.auth.database;
+package com.resources.auth.database.Users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -9,12 +10,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import  org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.*;
+
+
 
 
 /**
@@ -49,7 +52,7 @@ public class UserDAO{
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
         // Retrieve existing person first
-        Query query = session.createQuery("SELECT E.username, E.password FROM User E WHERE E.username = :login");
+        Query query = session.createQuery("FROM User E WHERE E.username = :login");
         query.setParameter("login", login);
         List results = query.list();
 
@@ -61,6 +64,7 @@ public class UserDAO{
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
         // Retrieve existing person first
+
         Query query = session.createQuery("FROM User E WHERE E.username = :login");
         query.setParameter("login", login);
         List<User> results = query.list();
@@ -68,11 +72,7 @@ public class UserDAO{
         if (results.size() > 1 || results.size() == 0) {
             return null;
         }
-        User user = results.get(0);
-        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new UserAuthority("ROLE_USER"));
-        user.setAuthorities(authorities);
-        return user;
+        return results.get(0);
     }
 
     public List<User> getAll() {
@@ -134,13 +134,12 @@ public class UserDAO{
         // Assign updated values to this person
         existingPerson.setUsername(person.getUsername());
         existingPerson.setPassword(person.getPassword());
+        existingPerson.setAuthority(person.getAuthority());
 
         // Save updates
         session.save(existingPerson);
         trans.commit();
 
     }
-
-
 
 }

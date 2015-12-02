@@ -25,6 +25,7 @@
         <property name="mappingResources">
             <list>
                 <value>user.hbm.xml</value>
+                <value>server.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">

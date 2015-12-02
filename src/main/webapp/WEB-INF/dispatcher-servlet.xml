@@ -16,14 +16,6 @@
         <property name="suffix" value=".jsp"/>
       </bean>
 
-
-
-    <!-- Load Hibernate related configuration -->
-    <!--<import resource="hibernate-context.xml" />-->
-
-    <!--Load Security related configuration-->
-    <!--<import resource="security.xml"/>-->
-
     <mvc:annotation-driven/>
     <mvc:resources mapping="/css/**" location="WEB-INF/css/" />
 
