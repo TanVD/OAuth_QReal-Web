@@ -1,9 +1,8 @@
-package com.resources.auth;
+package com.resources.auth.Controllers;
 
-import com.resources.auth.database.Server.Server;
-import com.resources.auth.database.Server.ServerDAO;
-import com.resources.auth.database.Users.User;
-import com.resources.auth.database.Users.UserDAO;
+import com.resources.auth.Database.Server.Server;
+import com.resources.auth.Database.Server.ServerDAO;
+import com.resources.auth.Security.AuthenticatedUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +25,8 @@ public class TableUserServersController {
     public ModelAndView tableUsersPrepare(ModelMap model, HttpServletRequest request) {
         ModelAndView table = new ModelAndView("userServers");
         List<Server> result = serverService.getAll();
-        ArrayList<String> ips = new ArrayList<String>();
-        for (Server server : result)
-        {
-            ips.add(server.getIp());
-        }
-        table.addObject("objects", ips);
+        table.addObject("objects", result); //not working
+        table.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return table;
     }
 }

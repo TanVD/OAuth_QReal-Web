@@ -8,8 +8,10 @@
     <name>untitled</name>
 
     <properties>
-        <spring.version>4.1.1.RELEASE</spring.version>
-        <springSec.version>4.0.3.RELEASE</springSec.version>
+        <!--<spring.version>4.1.1.RELEASE</spring.version>-->
+        <spring.version>4.2.1.RELEASE</spring.version>
+        <springSec.version>4.0.2.RELEASE</springSec.version>
+        <!--<springSec.version>3.2.8.RELEASE</springSec.version>-->
     </properties>
 
 
@@ -20,6 +22,8 @@
         </repository>
     </repositories>
     <dependencies>
+
+
         <!--Logging for spring-->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -28,45 +32,27 @@
         </dependency>
 
         <!--Dialect-->
-        <dependency>
-            <groupId>com.applerao</groupId>
-            <artifactId>hibernatesqlite</artifactId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!-- now in a file-->
+
         <!-- Hibernate dependencies-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>3.5.6-Final</version>
+            <version>5.0.2.Final</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-annotations</artifactId>-->
+            <!--<version>3.5.6-Final</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.5.6-Final</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>cglib</groupId>-->
-                    <!--<artifactId>cglib</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>dom4j</groupId>-->
-                    <!--<artifactId>dom4j</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-entitymanager</artifactId>-->
+            <!--<version>5.0.2.Final</version>-->
+        <!--</dependency>-->
+
 
         <!--Pooling-->
         <dependency>
@@ -76,12 +62,21 @@
         </dependency>
 
 
-        <!-- SQLite database JDBC -->
+        <!-- SQLite Database JDBC -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.8.11.2</version>
         </dependency>
+
+        <!--Dealing with proxy in UserDAOSec-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
+
 
 
         <!--Spring dependencies-->
@@ -106,10 +101,11 @@
 
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
@@ -145,6 +141,28 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${springSec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${springSec.version}</version>
+        </dependency>
+
+        <!-- for OAuth 2.0 -->
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.0.8.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.2</version>
         </dependency>
 
     </dependencies>

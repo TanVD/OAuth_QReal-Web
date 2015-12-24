@@ -1,5 +1,4 @@
-package com.resources.auth.database.Server;
-import com.resources.auth.database.Server.Server;
+package com.resources.auth.Database.Server;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

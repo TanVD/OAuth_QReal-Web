@@ -5,7 +5,7 @@
 <html>
 <head>
   <title>Login</title>
-  <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+  <link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
@@ -24,12 +24,14 @@
       <div class="account-wall">
         <img class="profile-img" src="https://cdn4.iconfinder.com/data/icons/mechanical-cogs-and-gear-wheel/500/cogwheel_configuration_configure_control_gear_gears_gearwheel_mechanics_pinion_rackwheel_screw-wheel_settings_tool_steel_machinery-512.png"
              alt="">
+        <%--<form class="form-signin" action="/login" method="post">--%>
         <form class="form-signin" action="/login" method="post">
           <input type="text" name="username" class="form-control" placeholder="Email:" required autofocus>
           <input type="password" name="password" class="form-control" placeholder="Password:" required>
           <button class="btn btn-lg btn-primary btn-block" type="submit">
             Sign in</button>
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+          <input type="hidden" name="${_csrf.parameterName}"
+                 value="${_csrf.token}" />
         </form>
       </div>
 

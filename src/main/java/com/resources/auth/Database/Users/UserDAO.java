@@ -1,8 +1,6 @@
-package com.resources.auth.database.Users;
+package com.resources.auth.Database.Users;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -10,14 +8,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import  org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.context.*;
-
-
 
 
 /**
@@ -25,7 +19,7 @@ import org.springframework.context.*;
  */
 @Service("userService")
 @Transactional
-public class UserDAO{
+public class UserDAO {
 
 
     public void setSessionFactory(SessionFactory sessionFactory) {

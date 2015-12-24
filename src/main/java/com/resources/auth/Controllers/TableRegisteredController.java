@@ -1,8 +1,9 @@
-package com.resources.auth;
+package com.resources.auth.Controllers;
 
-import com.resources.auth.database.Users.User;
-import com.resources.auth.database.Users.UserAuthority;
-import com.resources.auth.database.Users.UserDAO;
+import com.resources.auth.Database.Users.User;
+import com.resources.auth.Database.Users.UserAuthority;
+import com.resources.auth.Database.Users.UserDAO;
+import com.resources.auth.Security.AuthenticatedUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,6 +31,7 @@ public class TableRegisteredController {
         ModelAndView table = new ModelAndView("tableRegistered");
         List<User> result = userService.getAll();
         table.addObject("objects", result);
+        table.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return table;
     }
 
@@ -44,6 +46,7 @@ public class TableRegisteredController {
         User user = usersList.get(0);
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
         authorities.add(new UserAuthority("ROLE_ADMIN"));
+        authorities.add(new UserAuthority("ROLE_USER"));
         user.setAuthorities(authorities);
         userService.edit(user);
         return "redirect:/tableRegistered";

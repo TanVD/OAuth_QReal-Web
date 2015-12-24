@@ -1,7 +1,6 @@
-package com.resources.auth.database.Users;
+package com.resources.auth.Database.Users;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by tanvd on 08.11.15.

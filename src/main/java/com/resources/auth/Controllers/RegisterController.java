@@ -1,4 +1,4 @@
-package com.resources.auth;
+package com.resources.auth.Controllers;
 
 /**
  * Created by tanvd on 07.11.15.
@@ -6,16 +6,12 @@ package com.resources.auth;
 import javax.servlet.http.HttpServletRequest;
 import  javax.annotation.*;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import com.resources.auth.database.Server.Server;
-import com.resources.auth.database.Server.ServerDAO;
-import com.resources.auth.database.Users.UserAuthority;
-import com.resources.auth.database.Users.UserDAO;
-import com.resources.auth.database.Users.User;
+import com.resources.auth.Database.Server.Server;
+import com.resources.auth.Database.Server.ServerDAO;
+import com.resources.auth.Database.Users.UserAuthority;
+import com.resources.auth.Database.Users.UserDAO;
+import com.resources.auth.Database.Users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,11 +19,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
