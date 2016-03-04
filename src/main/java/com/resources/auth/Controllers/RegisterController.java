@@ -70,7 +70,6 @@ public class RegisterController {
         }
 
         User user = new User(name, passwordEncoder.encode(pwd1), authorities);
-        ((UserAuthority) authorities.iterator().next()).setUser(user);
         userService.add(user);
         broadcastToServers(user);
         return "redirect:/";

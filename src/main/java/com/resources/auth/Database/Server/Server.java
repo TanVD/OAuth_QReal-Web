@@ -21,7 +21,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by tanvd on 30.11.15.
+ * This is the class of server.
+ * This class also used as entity in database.
+ * @author TanVD
  */
 
 @Entity
@@ -134,6 +136,13 @@ public class Server implements Serializable{
         this.name = name;
     }
 
+    /**
+     * This function is used to broadcast new users credentials to server.
+     * It opens HTTP connection to server and broadcast via GET request
+     * new user to REST API of server. Will be used REST API template
+     * from server's field.
+     * @throws IOException In case of error or in case of not replying for 10 secs exception will be thrown.
+     */
     public void sendLogin(String login) throws IOException
     {
         String url = "http://" + ip + "/" + format.replace("{login}", login);

@@ -10,7 +10,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by tanvd on 30.11.15.
+ * This is the main class for work with servers tables in database.
+ * @author  TanVD
  */
 @Service("serverService")
 @Transactional
@@ -23,6 +24,9 @@ public class ServerDAO {
     @Resource(name = "sessionFactory")
     private SessionFactory sessionFactory;
 
+    /**
+     * Retrieves a single server by id.
+     */
     public Server get(Integer id) {
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -32,6 +36,10 @@ public class ServerDAO {
         return server;
     }
 
+    /**
+     * Retrieves a list of servers by ip.
+     * (List for sure...)
+     */
     public List get(String ip) {
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -43,6 +51,9 @@ public class ServerDAO {
         return results;
     }
 
+    /**
+     * Retrieves all servers.
+     */
     public List<Server> getAll() {
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -53,6 +64,9 @@ public class ServerDAO {
         return results;
     }
 
+    /**
+     * Adds a single server.
+     */
     public void add(Server server) {
         if (get(server.getIp()).size() > 0) {
             return;
@@ -64,6 +78,9 @@ public class ServerDAO {
 
     }
 
+    /**
+     * Deletes the server by id.
+     */
     public void delete(Integer id) {
 
         // Retrieve session from Hibernate
@@ -79,6 +96,9 @@ public class ServerDAO {
 
     }
 
+    /**
+     * Edits the server.
+     */
     public void edit(Server server) {
 
         // Retrieve session from Hibernate

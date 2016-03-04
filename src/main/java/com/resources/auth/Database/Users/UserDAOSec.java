@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by tanvd on 08.11.15.
+ * This class provides access to database for spring security.
+ * It uses userService to get records from base.
+ * @author TanVD
  */
 @Service("userServiceSec")
 @Transactional

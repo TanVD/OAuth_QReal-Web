@@ -25,6 +25,10 @@ import org.hibernate.internal.util.JdbcExceptionHelper;
 import org.hibernate.mapping.Column;
 import org.hibernate.type.StandardBasicTypes;
 
+/**
+ * This is dialect for sqlite database.
+ * @author gwenn (https://github.com/gwenn)
+ */
 public class SQLiteDialect extends Dialect {
     private final UniqueDelegate uniqueDelegate;
 

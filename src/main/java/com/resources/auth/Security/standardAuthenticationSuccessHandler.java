@@ -15,19 +15,23 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Created by tanvd on 01.12.15.
+ * This class overrides default redirection strategies after authentication.
+ * User will be redirected to list of his servers and administrator will be
+ * redirected to the control panel.
+ * @author TanVD
  */
 public class standardAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
         handle(request, response, authentication);
         clearAuthenticationAttributes(request);
     }
 
-    protected void handle(HttpServletRequest request,
-                          HttpServletResponse response, Authentication authentication) throws IOException {
+    protected void handle(HttpServletRequest request, HttpServletResponse response,
+                          Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(authentication);
 
         if (response.isCommitted()) {
@@ -38,6 +42,11 @@ public class standardAuthenticationSuccessHandler implements AuthenticationSucce
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
+    /**
+     * Function determines right url for redirection relying on (major) UserAuthority of user.
+     * @param authentication List of UserAuthorities of user
+     * @return String with target url for this authority
+     */
     protected String determineTargetUrl(Authentication authentication) {
         boolean isUser = false;
         boolean isAdmin = false;
@@ -69,10 +78,10 @@ public class standardAuthenticationSuccessHandler implements AuthenticationSucce
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
 
-    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-        this.redirectStrategy = redirectStrategy;
-    }
-    protected RedirectStrategy getRedirectStrategy() {
-        return redirectStrategy;
-    }
+//    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+//        this.redirectStrategy = redirectStrategy;
+//    }
+//    protected RedirectStrategy getRedirectStrategy() {
+//        return redirectStrategy;
+//    }
 }

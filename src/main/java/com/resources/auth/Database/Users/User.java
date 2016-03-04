@@ -13,10 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by tanvd on 07.11.15.
+ * This is a class of user.
+ * This class also used as entity in database.
  */
 @Entity
-@Table(name = "PERSON")
+@Table(name = "USERS")
 public class User implements Serializable, UserDetails {
     static Integer idInc = 0;
 
@@ -31,9 +32,16 @@ public class User implements Serializable, UserDetails {
     @Column(name = "PASSWORD")
     private String password;
 
+    /**
+     * Because of some problems with List<Authorities> (in moment of saving to database)
+     * we save authorities serialized to string.
+     */
     @Column(name = "AUTHORITIES")
     private String authority;
 
+    /**
+     * Converts serialized in string authorities into set
+     */
     private Set<GrantedAuthority> convertStringToSet(String authority)
     {
         Set<GrantedAuthority> userRoles = new HashSet<GrantedAuthority>();
@@ -43,6 +51,9 @@ public class User implements Serializable, UserDetails {
         return userRoles;
     }
 
+    /**
+     * Serialize set of authorities into string
+     */
     private String convertSetToString(Collection<GrantedAuthority> userAuthorities)
     {
         String userRoles = new String();

@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * Created by tanvd on 07.11.15.
+ * This is the main class for work with users tables in database.
+ * @author TanVD
  */
 @Service("userService")
 @Transactional
@@ -30,7 +31,7 @@ public class UserDAO {
     private SessionFactory sessionFactory;
 
     /**
-     * Retrieves a single user
+     * Retrieves a single user by id
      */
     public User get(Integer id) {
         // Retrieve session from Hibernate
@@ -42,6 +43,10 @@ public class UserDAO {
         return person;
     }
 
+    /**
+     * Retrieves a list of users by login.
+     * List here to be sure...
+     */
     public List get(String login) {
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -54,6 +59,10 @@ public class UserDAO {
         return results;
     }
 
+    /**
+     * Retrieves a single user by login.
+     * (Take first from list of returned)
+     */
     public UserDetails loadUserByUsername(String login){
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -69,6 +78,9 @@ public class UserDAO {
         return results.get(0);
     }
 
+    /**
+     * Retrieves all users from database.
+     */
     public List<User> getAll() {
         Session session = sessionFactory.getCurrentSession();
         Transaction trans = session.beginTransaction();
@@ -80,7 +92,7 @@ public class UserDAO {
     }
 
     /**
-     * Adds a new person
+     * Adds a new user
      */
     public void add(User person) {
         if (get(person.getUsername()).size() > 0) {
@@ -94,9 +106,7 @@ public class UserDAO {
     }
 
     /**
-     * Deletes an existing person
-     *
-     * @param id the id of the existing person
+     * Deletes an existing user by id
      */
     public void delete(Integer id) {
 
@@ -114,7 +124,7 @@ public class UserDAO {
     }
 
     /**
-     * Edits an existing person
+     * Edits an existing user
      */
     public void edit(User person) {
 

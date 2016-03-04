@@ -12,22 +12,11 @@ public class UserAuthority implements GrantedAuthority{
 
     private String authority;
 
-    private User user;
-
     public UserAuthority(String authority){
         this.authority = authority;
         id = idInc;
         idInc += 1;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
 
     public String getAuthority(){
         return authority;
