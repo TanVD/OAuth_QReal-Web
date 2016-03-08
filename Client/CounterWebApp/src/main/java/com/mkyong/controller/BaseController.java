@@ -1,9 +1,7 @@
 package com.mkyong.controller;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +28,6 @@ public class BaseController {
 
 	@RequestMapping(value = "/CounterWebApp", method = RequestMethod.GET)
 	public String welcome(ModelMap model) {
-
-
-		/*if (messages == 0) {
-			messages = new List<String>();
-		}*/
 
 		model.addAttribute("message", "Welcome");
 		model.addAttribute("counter", ++counter);
@@ -73,18 +66,5 @@ public class BaseController {
 		model.addAttribute("str", string);
 		return "myLogin";
 	}
-
-	@RequestMapping("/trusted/message")
-	public String trusted(Model model) throws Exception {
-		model.addAttribute("str", this.sparklrService.getTrustedMessage());
-		return "myLogin";
-	}
-
-/*	@RequestMapping(value = "/getMyLogin", method = RequestMethod.GET)
-	public String getMyLogin(ModelMap model) {
-		String string = sparklrService.getLoginMy();
-		model.addAttribute("str", string);
-		return "myLogin";
-	}*/
 
 }

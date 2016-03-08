@@ -15,14 +15,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.web.accept.ContentNegotiationManagerFactoryBean;
 import org.springframework.web.client.RestOperations;
@@ -30,7 +26,6 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -75,38 +70,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 
     @Bean
-    public SparklrService sparklrService(@Value("${sparklrPhotoListURL}")
-                                             String sparklrPhotoListURL, @Value("${sparklrPhotoURLPattern}")
-                                             String sparklrPhotoURLPattern, @Value("${sparklrTrustedMessageURL}")
-                                             String sparklrTrustedMessageURL, @Value("${userService}")
-                                             String userService             ,  @Qualifier("sparklrRestTemplate")
-                                             RestOperations sparklrRestTemplate, @Qualifier("trustedClientRestTemplate")
-                                             RestOperations trustedClientRestTemplate) {
+    public SparklrService sparklrService(@Value("${userService}") String userService,
+                                         @Qualifier("sparklrRestTemplate") RestOperations sparklrRestTemplate) {
         SparklrService sparklrService = new SparklrService();
-        sparklrService.setSparklrPhotoListURL(sparklrPhotoListURL);
-        sparklrService.setSparklrPhotoURLPattern(sparklrPhotoURLPattern);
-        sparklrService.setSparklrTrustedMessageURL(sparklrTrustedMessageURL);
         sparklrService.setOurUserServersUrl(userService);
         sparklrService.setSparklrRestTemplate(sparklrRestTemplate);
-        sparklrService.setTrustedClientRestTemplate(trustedClientRestTemplate);
-        return sparklrService;
-    }
-
-    @Bean
-    public SparklrService sparklrRedirectService(@Value("${sparklrPhotoListURL}")
-                                                     String sparklrPhotoListURL, @Value("${sparklrPhotoURLPattern}")
-                                                     String sparklrPhotoURLPattern, @Value("${sparklrTrustedMessageURL}")
-                                                     String sparklrTrustedMessageURL, @Value("${userService}")
-                                                     String userService             ,  @Qualifier("sparklrRedirectRestTemplate")
-                                                     RestOperations sparklrRestTemplate, @Qualifier("trustedClientRestTemplate")
-                                                     RestOperations trustedClientRestTemplate) {
-        SparklrService sparklrService = new SparklrService();
-        sparklrService.setSparklrPhotoListURL(sparklrPhotoListURL);
-        sparklrService.setSparklrPhotoURLPattern(sparklrPhotoURLPattern);
-        sparklrService.setSparklrTrustedMessageURL(sparklrTrustedMessageURL);
-        sparklrService.setOurUserServersUrl(userService);
-        sparklrService.setSparklrRestTemplate(sparklrRestTemplate);
-        sparklrService.setTrustedClientRestTemplate(trustedClientRestTemplate);
         return sparklrService;
     }
 
@@ -116,11 +84,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         conversionService.setConverters(Collections.singleton(new AccessTokenRequestConverter()));
         return conversionService;
     }
-
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-//    }
-//    don't think it is necessary
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -137,6 +100,11 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         @Value("${userAuthorizationUri}")
         private String userAuthorizationUri;
 
+        /**
+         * Using plain authorization flow. Redirecting right to the page from where client went.
+         * Using client ID tonr. (no registered redirect)
+         * @return
+         */
         @Bean
         public OAuth2ProtectedResourceDetails sparklr() {
             AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
@@ -149,42 +117,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
             return details;
         }
 
-        @Bean
-        public OAuth2ProtectedResourceDetails sparklrRedirect() {
-            AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-            details.setId("sparklr/tonr-redirect");
-            details.setClientId("tonr-with-redirect");
-            details.setClientSecret("secret");
-            details.setAccessTokenUri(accessTokenUri);
-            details.setUserAuthorizationUri(userAuthorizationUri);
-            details.setScope(Arrays.asList("read", "write"));
-            details.setUseCurrentUri(false);
-            return details;
-        }
-
-        @Bean
-        public OAuth2ProtectedResourceDetails trusted() {
-            ClientCredentialsResourceDetails details = new ClientCredentialsResourceDetails();
-            details.setId("sparklr/trusted");
-            details.setClientId("my-client-with-registered-redirect");
-            details.setAccessTokenUri(accessTokenUri);
-            details.setScope(Arrays.asList("trust"));
-            return details;
-        }
-
-        @Bean
+        @Bean(name = "sparklrRestTemplate")
         public OAuth2RestTemplate sparklrRestTemplate(OAuth2ClientContext clientContext) {
             return new OAuth2RestTemplate(sparklr(), clientContext);
-        }
-
-        @Bean
-        public OAuth2RestTemplate sparklrRedirectRestTemplate(OAuth2ClientContext clientContext) {
-            return new OAuth2RestTemplate(sparklrRedirect(), clientContext);
-        }
-
-        @Bean
-        public OAuth2RestTemplate trustedClientRestTemplate() {
-            return new OAuth2RestTemplate(trusted(), new DefaultOAuth2ClientContext());
         }
 
     }

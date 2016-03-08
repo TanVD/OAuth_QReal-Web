@@ -21,7 +21,6 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
     protected WebApplicationContext createServletApplicationContext() {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.scan("com.resources.auth");
-        //context.scan(ClassUtils.getPackageName(getClass()));
         return context;
     }
 

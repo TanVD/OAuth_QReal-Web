@@ -26,7 +26,7 @@
         <img class="profile-img" src="https://image.freepik.com/free-icon/_318-34174.jpg"
              alt="">
         <%--<form class="form-signin" action="login" method="post">--%>
-        <form class="form-signin" action="/login" method="post">
+        <form class="form-signin" action="login" method="post">
           <input type="text" name="username" class="form-control" placeholder="Email:" required autofocus>
           <input type="password" name="password" class="form-control" placeholder="Password:" required>
           <button class="btn btn-lg btn-primary btn-block" type="submit">
@@ -36,7 +36,7 @@
       </div>
 
 
-      <a href="/register" class="text-center new-account">Create an account </a>
+      <a href="register" class="text-center new-account">Create an account </a>
     </div>
   </div>
 </div>

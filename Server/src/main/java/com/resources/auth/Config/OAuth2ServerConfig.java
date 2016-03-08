@@ -34,7 +34,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * @author Rob Winch
- *
  */
 @Configuration
 public class OAuth2ServerConfig {
@@ -64,10 +63,6 @@ public class OAuth2ServerConfig {
                     .authorizeRequests()
                     .antMatchers("/userServers/me").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
                     //.antMatchers("/me").access("#oauth2.hasScope('read')")
-                    .antMatchers("/photos").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
-                    .antMatchers("/photos/trusted/**").access("#oauth2.hasScope('trust')")
-                    .antMatchers("/photos/user/**").access("#oauth2.hasScope('trust')")
-                    .antMatchers("/photos/**").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
                     .regexMatchers(HttpMethod.DELETE, "/oauth/users/([^/].*?)/tokens/.*")
                     .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('write')")
                     .regexMatchers(HttpMethod.GET, "/oauth/clients/([^/].*?)/users/.*")
@@ -93,11 +88,8 @@ public class OAuth2ServerConfig {
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
 
-//        @Value("${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}")
+//        @Value("${tonr.redirect:http://localhost:6060/client/sparklr/redirect}")
 //        private String tonrRedirectUri;
-
-          @Value("${tonr.redirect:http://192.168.0.108:8080/sparklr/redirect}")
-          private String tonrRedirectUri;
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -108,48 +100,9 @@ public class OAuth2ServerConfig {
                     .authorizedGrantTypes("authorization_code", "implicit")
                     .authorities("ROLE_CLIENT")
                     .scopes("read", "write")
-                    .secret("secret")
-                    .and()
-                    .withClient("tonr-with-redirect")
-                    .resourceIds(SPARKLR_RESOURCE_ID)
-                    .authorizedGrantTypes("authorization_code", "implicit")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("read", "write")
-                    .secret("secret")
-                    .redirectUris(tonrRedirectUri)
-                    .and()
-                    .withClient("my-client-with-registered-redirect")
-                    .resourceIds(SPARKLR_RESOURCE_ID)
-                    .authorizedGrantTypes("authorization_code", "client_credentials")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("read", "trust")
-                    .redirectUris("http://anywhere?key=value")
-                    .and()
-                    .withClient("my-trusted-client")
-                    .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
-                    .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-                    .scopes("read", "write", "trust")
-                    .accessTokenValiditySeconds(60)
-                    .and()
-                    .withClient("my-trusted-client-with-secret")
-                    .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
-                    .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-                    .scopes("read", "write", "trust")
-                    .secret("somesecret")
-                    .and()
-                    .withClient("my-less-trusted-client")
-                    .authorizedGrantTypes("authorization_code", "implicit")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("read", "write", "trust")
-                    .and()
-                    .withClient("my-less-trusted-autoapprove-client")
-                    .authorizedGrantTypes("implicit")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("read", "write", "trust")
-                    .autoApprove(true);
+                    .secret("secret");
             // @formatter:on
         }
-
 
 
         @Override

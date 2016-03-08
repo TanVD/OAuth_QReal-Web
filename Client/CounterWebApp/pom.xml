@@ -126,7 +126,8 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<path>/</path>
+					<port>6060</port>
+					<path>/client</path>
 				</configuration>
 			</plugin>
 
