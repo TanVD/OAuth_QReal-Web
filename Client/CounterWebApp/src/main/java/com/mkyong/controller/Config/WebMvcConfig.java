@@ -1,25 +1,31 @@
 package com.mkyong.controller.Config;
 
 
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.mkyong.controller.Config.OAuthFirstStep.OAuth2UserDetailsLoaderDet;
+import com.racquettrack.security.oauth.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.stereotype.Service;
 import org.springframework.web.accept.ContentNegotiationManagerFactoryBean;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.servlet.View;
@@ -34,15 +40,67 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import com.mkyong.controller.SparklrService;
 import com.mkyong.controller.AccessTokenRequestConverter;
 
+import javax.annotation.Resource;
+
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:oauth.properties")
+@ComponentScan("com.mkyong")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
+    //First step auth
+    private String accessTokenUri = "http://localhost:8080/oauth/token";
+
+    private String userAuthorizationUri = "http://localhost:8080/oauth/authorize";
+
+    private String userInfoUri = "http://localhost:8080/userInfo";
+
+
+    @Bean (name = "properties")
+    public OAuth2ServiceProperties oAuth2ServiceProperties() throws URISyntaxException {
+        OAuth2ServiceProperties details = new OAuth2ServiceProperties();
+        details.setUserAuthorisationUri(userAuthorizationUri);
+        details.setRedirectUri("/oauth/callback");
+        details.setAccessTokenUri(accessTokenUri);
+        details.setClientId("tonr");
+        details.setClientSecret("secret");
+        details.setUserInfoUri(userInfoUri);
+        return details;
+    }
+
+    @Bean(name = "loader")
+    public OAuth2UserDetailsLoader<User, SimpleGrantedAuthority> oAuth2UserDetailsLoader() {
+        return new OAuth2UserDetailsLoaderDet();
+    }
+
+    @Bean(name = "details")
+    @DependsOn("properties")
+    public OAuth2UserDetailsService<User> oAuth2UserDetailsService() throws URISyntaxException {
+        OAuth2UserDetailsService service = new OAuth2UserDetailsService();
+        service.setoAuth2ServiceProperties(oAuth2ServiceProperties());
+        service.setoAuth2UserDetailsLoader(oAuth2UserDetailsLoader());
+        OAuth2UserInfoProvider provider = new DefaultOAuth2UserInfoProvider();
+        service.setoAuth2UserInfoProvider(provider);
+        return service;
+    }
+
+    @Bean(name = "provider")
+    @DependsOn("details")
+    public OAuth2AuthenticationProvider oAuth2AuthenticationProvider() throws URISyntaxException {
+        OAuth2AuthenticationProvider authProv = new OAuth2AuthenticationProvider();
+        authProv.setAuthenticatedUserDetailsService(oAuth2UserDetailsService());
+        authProv.setoAuth2ServiceProperties(oAuth2ServiceProperties());
+        return authProv;
+    }
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+    public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPoint() throws URISyntaxException {
+        OAuth2AuthenticationEntryPoint entry = new OAuth2AuthenticationEntryPoint();
+        entry.setoAuth2ServiceProperties(oAuth2ServiceProperties());
+        return entry;
     }
+
+
+    //First step th
+
 
     @Bean
     public ContentNegotiatingViewResolver contentViewResolver() throws Exception {
@@ -65,63 +123,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
-    }
-
-
-
-    @Bean
-    public SparklrService sparklrService(@Value("${userService}") String userService,
-                                         @Qualifier("sparklrRestTemplate") RestOperations sparklrRestTemplate) {
-        SparklrService sparklrService = new SparklrService();
-        sparklrService.setOurUserServersUrl(userService);
-        sparklrService.setSparklrRestTemplate(sparklrRestTemplate);
-        return sparklrService;
-    }
-
-    @Bean
-    public ConversionServiceFactoryBean conversionService() {
-        ConversionServiceFactoryBean conversionService = new ConversionServiceFactoryBean();
-        conversionService.setConverters(Collections.singleton(new AccessTokenRequestConverter()));
-        return conversionService;
-    }
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new BufferedImageHttpMessageConverter());
-    }
-
-    @Configuration
-    @EnableOAuth2Client
-    protected static class ResourceConfiguration {
-
-        @Value("${accessTokenUri}")
-        private String accessTokenUri;
-
-        @Value("${userAuthorizationUri}")
-        private String userAuthorizationUri;
-
-        /**
-         * Using plain authorization flow. Redirecting right to the page from where client went.
-         * Using client ID tonr. (no registered redirect)
-         * @return
-         */
-        @Bean
-        public OAuth2ProtectedResourceDetails sparklr() {
-            AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-            details.setId("sparklr/tonr");
-            details.setClientId("tonr");
-            details.setClientSecret("secret");
-            details.setAccessTokenUri(accessTokenUri);
-            details.setUserAuthorizationUri(userAuthorizationUri);
-            details.setScope(Arrays.asList("read", "write"));
-            return details;
-        }
-
-        @Bean(name = "sparklrRestTemplate")
-        public OAuth2RestTemplate sparklrRestTemplate(OAuth2ClientContext clientContext) {
-            return new OAuth2RestTemplate(sparklr(), clientContext);
-        }
-
-    }
+       }
 
 }

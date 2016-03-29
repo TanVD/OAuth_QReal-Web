@@ -13,12 +13,6 @@ import java.util.*;
 @Controller
 public class BaseController {
 
-	public void setSparklrService(SparklrService sparklrService) {
-		this.sparklrService = sparklrService;
-	}
-
-	@Resource(name = "sparklrService")
-	private SparklrService sparklrService;
 
 	private static int counter = 0;
 	private static final String VIEW_INDEX = "index";
@@ -60,11 +54,5 @@ public class BaseController {
 		return "loginPage";
 	}
 
-	@RequestMapping(value = "/getMyLogin")
-	public String getMyLogin(ModelMap model) {
-		String string = sparklrService.getLoginMy();
-		model.addAttribute("str", string);
-		return "myLogin";
-	}
 
 }
