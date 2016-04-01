@@ -183,6 +183,8 @@
                 <version>2.2</version>
                 <configuration>
                     <path>/</path>
+                        <port>7070</port>
+                        <path>/server</path>
                 </configuration>
             </plugin>
         </plugins>

@@ -31,7 +31,7 @@
 <div class="container-fluid">
     <section class="container">
         <div class="container-page">
-            <form class="form-signin" action="/registerCheck" method="post">
+            <form class="form-signin" action="registerCheck" method="post">
                 <div class="col-md-6">
                     <h3 class="dark-grey">Registration</h3>
 

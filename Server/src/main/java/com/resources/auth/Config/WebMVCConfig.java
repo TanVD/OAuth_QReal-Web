@@ -9,6 +9,7 @@ import com.resources.auth.Security.OAuth.MyUserApprovalHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 @Configuration
 @EnableWebMvc
+@Import({SecurityConfiguration.class, OAuth2ServerConfig.class, MethodSecurityConfig.class, HibernateConfig.class})
 public class WebMVCConfig extends WebMvcConfigurerAdapter {
 
     @Bean

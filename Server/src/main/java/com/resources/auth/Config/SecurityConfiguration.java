@@ -54,9 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-                        //Возможно нужно здесь обеспечить доступ через оаус, а там (в секконфиге) запретить доступ обычными способами
                 .requestMatchers()
-                .antMatchers("/*", "/tableRegistered/**", "/servers/**", "/userServers*", "/register/**", "/resources/**", "/oauth/**")
+                .antMatchers("/*", "/tableRegistered/**", "/servers/**", "/register/**", "/resources/**", "/oauth/authorize")
                 .and()
 
                 .exceptionHandling()
@@ -64,7 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/oauth/**")
+                .antMatchers("/oauth/authorize")
                 .hasRole("USER")
                 .and()
 

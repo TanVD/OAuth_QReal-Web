@@ -38,14 +38,14 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="/servers"><span class="glyphicon glyphicon-cloud"></span> Table servers</a></li>
-        <li><a href="/tableRegistered"><span class="glyphicon glyphicon-user"></span> Table users</a></li>
+        <li><a href="servers"><span class="glyphicon glyphicon-cloud"></span> Table servers</a></li>
+        <li><a href="tableRegistered"><span class="glyphicon glyphicon-user"></span> Table users</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">${name} <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="logout">Logout</a></li>
           </ul>
         </li>
       </ul>
@@ -56,7 +56,7 @@
 
 <div class="container">
   <div class="row">
-    <form role="form" class="col-md-9 go-right" action="/servers/newServerAdded" method="post">
+    <form role="form" class="col-md-9 go-right" action="servers/newServerAdded" method="post">
       <h2>Create server</h2>
       <div class="form-group">
         <input id="name" name="name" type="text" class="form-control" placeholder="Server's name" required>

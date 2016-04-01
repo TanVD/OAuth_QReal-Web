@@ -25,7 +25,7 @@
         <img class="profile-img" src="https://cdn4.iconfinder.com/data/icons/mechanical-cogs-and-gear-wheel/500/cogwheel_configuration_configure_control_gear_gears_gearwheel_mechanics_pinion_rackwheel_screw-wheel_settings_tool_steel_machinery-512.png"
              alt="">
         <%--<form class="form-signin" action="/login" method="post">--%>
-        <form class="form-signin" action="/login" method="post">
+        <form class="form-signin" action="login" method="post">
           <input type="text" name="username" class="form-control" placeholder="Email:" required autofocus>
           <input type="password" name="password" class="form-control" placeholder="Password:" required>
           <button class="btn btn-lg btn-primary btn-block" type="submit">
@@ -38,7 +38,7 @@
       <c:if test="${error}">
       <h2 class="text-center login-title">Password or login wrong</h2>
       </c:if>
-      <a href="/register" class="text-center new-account">Create an account </a>
+      <a href="register" class="text-center new-account">Create an account </a>
     </div>
   </div>
 </div>

@@ -57,18 +57,12 @@ public class OAuth2ServerConfig {
                     // session creation to be allowed (it's disabled by default in 2.0.6)
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and()
-                    //Возможно нужно здесь обеспечить доступ через оаус, а там (в секконфиге) запретить доступ обычными способами
-                    .requestMatchers().antMatchers("/photos/**", "/oauth/users/**", "/oauth/clients/**", /*"/me",*/ "/userServers/me")
+                    .requestMatchers().antMatchers("/oauth/userInfo")
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/userServers/me").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))")
-                    //.antMatchers("/me").access("#oauth2.hasScope('read')")
-                    .regexMatchers(HttpMethod.DELETE, "/oauth/users/([^/].*?)/tokens/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('write')")
-                    .regexMatchers(HttpMethod.GET, "/oauth/clients/([^/].*?)/users/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and (hasRole('ROLE_USER') or #oauth2.isClient()) and #oauth2.hasScope('read')")
-                    .regexMatchers(HttpMethod.GET, "/oauth/clients/.*")
-                    .access("#oauth2.clientHasRole('ROLE_CLIENT') and #oauth2.isClient() and #oauth2.hasScope('read')");
+                    .antMatchers("/oauth/userInfo")
+                    .access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");
+
             // @formatter:on
         }
 
@@ -88,14 +82,12 @@ public class OAuth2ServerConfig {
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
 
-//        @Value("${tonr.redirect:http://localhost:6060/client/sparklr/redirect}")
-//        private String tonrRedirectUri;
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
             // @formatter:off
-            clients.inMemory().withClient("tonr")
+            clients.inMemory().withClient("robotsDiagram")
                     .resourceIds(SPARKLR_RESOURCE_ID)
                     .authorizedGrantTypes("authorization_code", "implicit")
                     .authorities("ROLE_CLIENT")
@@ -111,9 +103,14 @@ public class OAuth2ServerConfig {
                     .authenticationManager(authenticationManager);
         }
 
+
         @Override
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-            oauthServer.realm("sparklr2/client");
+            oauthServer.realm("authServer/robotsDiagram");
+
+            //Needed to disable http-basic authentication in all oauth requests
+            oauthServer.allowFormAuthenticationForClients();
+
         }
 
     }
