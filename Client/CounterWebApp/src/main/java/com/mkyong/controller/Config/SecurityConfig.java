@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     OAuth2AuthenticationFilter filter;
 
-    @Resource(name = "properties")
-    OAuth2ServiceProperties serviceProperties;
+//    @Resource(name = "properties")
+//    OAuth2ServiceProperties serviceProperties;
 
 
     @Override
@@ -47,10 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @DependsOn("manager")
-    public OAuth2AuthenticationFilter oAuth2AuthenticationFilter() throws Exception {
+    @Autowired
+    public OAuth2AuthenticationFilter oAuth2AuthenticationFilter(OAuth2ServiceProperties serviceProperties,
+                                                                 AuthenticationManager manager) throws Exception {
         OAuth2AuthenticationFilter filter = new OAuth2AuthenticationFilter("/oauth/callback");
-        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setAuthenticationManager(manager);
         filter.setoAuth2ServiceProperties(serviceProperties);
         return filter;
     }

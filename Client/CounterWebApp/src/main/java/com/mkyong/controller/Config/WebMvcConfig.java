@@ -66,35 +66,38 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return details;
     }
 
-    @Bean(name = "loader")
+    @Bean
     public OAuth2UserDetailsLoader<User, SimpleGrantedAuthority> oAuth2UserDetailsLoader() {
         return new OAuth2UserDetailsLoaderDet();
     }
 
-    @Bean(name = "details")
-    @DependsOn("properties")
-    public OAuth2UserDetailsService<User> oAuth2UserDetailsService() throws URISyntaxException {
+    @Bean
+    @Autowired
+    public OAuth2UserDetailsService<User> oAuth2UserDetailsService(OAuth2ServiceProperties serviceProperties,
+                                                                   OAuth2UserDetailsLoader detailsLoader) throws URISyntaxException {
         OAuth2UserDetailsService service = new OAuth2UserDetailsService();
-        service.setoAuth2ServiceProperties(oAuth2ServiceProperties());
-        service.setoAuth2UserDetailsLoader(oAuth2UserDetailsLoader());
+        service.setoAuth2ServiceProperties(serviceProperties);
+        service.setoAuth2UserDetailsLoader(detailsLoader);
         OAuth2UserInfoProvider provider = new DefaultOAuth2UserInfoProvider();
         service.setoAuth2UserInfoProvider(provider);
         return service;
     }
 
     @Bean(name = "provider")
-    @DependsOn("details")
-    public OAuth2AuthenticationProvider oAuth2AuthenticationProvider() throws URISyntaxException {
+    @Autowired
+    public OAuth2AuthenticationProvider oAuth2AuthenticationProvider(OAuth2ServiceProperties serviceProperties,
+                                                                     OAuth2UserDetailsService<User> details) throws URISyntaxException {
         OAuth2AuthenticationProvider authProv = new OAuth2AuthenticationProvider();
-        authProv.setAuthenticatedUserDetailsService(oAuth2UserDetailsService());
-        authProv.setoAuth2ServiceProperties(oAuth2ServiceProperties());
+        authProv.setAuthenticatedUserDetailsService(details);
+        authProv.setoAuth2ServiceProperties(serviceProperties);
         return authProv;
     }
 
     @Bean
-    public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPoint() throws URISyntaxException {
+    @Autowired
+    public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPoint(OAuth2ServiceProperties serviceProperties) throws URISyntaxException {
         OAuth2AuthenticationEntryPoint entry = new OAuth2AuthenticationEntryPoint();
-        entry.setoAuth2ServiceProperties(oAuth2ServiceProperties());
+        entry.setoAuth2ServiceProperties(serviceProperties);
         return entry;
     }
 
