@@ -32,6 +32,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.annotation.Resource;
+
 /**
  * @author Rob Winch
  */
@@ -78,6 +80,9 @@ public class OAuth2ServerConfig {
         @Autowired
         private UserApprovalHandler userApprovalHandler;
 
+        @Resource(name = "clientServiceSec")
+        private ClientDetailsService clientServiceSec;
+
         @Autowired
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
@@ -86,14 +91,13 @@ public class OAuth2ServerConfig {
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
-            // @formatter:off
-            clients.inMemory().withClient("robotsDiagram")
-                    .resourceIds(SPARKLR_RESOURCE_ID)
-                    .authorizedGrantTypes("authorization_code", "implicit")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("read", "write")
-                    .secret("secret");
-            // @formatter:on
+//            clients.inMemory().withClient("robotsDiagram")
+//                    .resourceIds(SPARKLR_RESOURCE_ID)
+//                    .authorizedGrantTypes("authorization_code", "implicit")
+//                    .authorities("ROLE_CLIENT")
+//                    .scopes("read", "write")
+//                    .secret("secret");
+            clients.withClientDetails(clientServiceSec);
         }
 
 
@@ -118,8 +122,8 @@ public class OAuth2ServerConfig {
     @Configuration
     protected static class Stuff {
 
-        @Autowired
-        private ClientDetailsService clientDetailsService;
+        @Resource(name = "clientServiceSec")
+        private ClientDetailsService clientServiceSec;
 
         @Autowired
         private TokenStore tokenStore;
@@ -137,8 +141,8 @@ public class OAuth2ServerConfig {
         public MyUserApprovalHandler userApprovalHandler() throws Exception {
             MyUserApprovalHandler handler = new MyUserApprovalHandler();
             handler.setApprovalStore(approvalStore());
-            handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
-            handler.setClientDetailsService(clientDetailsService);
+            handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientServiceSec));
+            handler.setClientDetailsService(clientServiceSec);
             handler.setUseApprovalStore(true);
             return handler;
         }

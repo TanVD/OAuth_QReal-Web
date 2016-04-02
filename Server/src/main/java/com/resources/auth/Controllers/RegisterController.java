@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import  javax.annotation.*;
 import java.io.*;
 
-import com.resources.auth.Database.Server.Server;
-import com.resources.auth.Database.Server.ServerDAO;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
 import com.resources.auth.Database.Users.User;
@@ -28,9 +26,6 @@ public class RegisterController {
     @Resource(name="userService")
     private UserDAO userService;
 
-    @Resource(name="serverService")
-    private ServerDAO serverService;
-
     @Resource(name="passwordEncoder")
     PasswordEncoder passwordEncoder;
 
@@ -38,15 +33,6 @@ public class RegisterController {
     public String login(ModelMap model) {
         model.addAttribute("error", false);
         return "register";
-    }
-
-    private void broadcastToServers(User user) throws IOException
-    {
-        List<Server> servers = serverService.getAll();
-        for(Server server : servers)
-        {
-            server.sendLogin(user.getUsername());
-        }
     }
 
     @RequestMapping(value = "registerCheck", method = RequestMethod.POST)
@@ -71,7 +57,7 @@ public class RegisterController {
 
         User user = new User(name, passwordEncoder.encode(pwd1), authorities);
         userService.add(user);
-        broadcastToServers(user);
+//        broadcastToServers(user);
         return "redirect:/";
     }
 }

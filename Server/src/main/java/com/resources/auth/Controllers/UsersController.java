@@ -22,7 +22,7 @@ import java.util.Set;
  * Created by tanvd on 08.11.15.
  */
 @Controller
-public class TableRegisteredController {
+public class UsersController {
     @Resource(name="userService")
     private UserDAO userService;
 

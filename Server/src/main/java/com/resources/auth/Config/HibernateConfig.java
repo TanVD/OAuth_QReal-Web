@@ -4,21 +4,19 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.resources.auth.Database.Server.Server;
-import com.resources.auth.Database.Users.User;
-import com.resources.auth.Database.Users.UserDAO;
-import com.resources.auth.Database.Users.UserDAOSec;
+import com.resources.auth.Database.Client.Client;
+import com.resources.auth.Database.Client.ClientDAO;
+import com.resources.auth.Database.Client.ClientDAOSec;
+import com.resources.auth.Database.Users.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -51,7 +49,7 @@ public class HibernateConfig {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
         sessionBuilder.addProperties(getHibernateProperties());
         sessionBuilder.addAnnotatedClasses(User.class);
-        sessionBuilder.addAnnotatedClasses(Server.class);
+        sessionBuilder.addAnnotatedClasses(Client.class);
         return sessionBuilder.buildSessionFactory();
     }
 
@@ -79,6 +77,22 @@ public class HibernateConfig {
         UserDAOSec userServiceSec = new UserDAOSec();
         userServiceSec.setUserService(userService);
         return userServiceSec;
+    }
+
+    @Autowired
+    @Bean(name = "clientService")
+    public ClientDAO getClientDao(SessionFactory sessionFactory) {
+        ClientDAO clientService = new ClientDAO();
+        clientService.setSessionFactory(sessionFactory);
+        return clientService;
+    }
+
+    @Autowired
+    @Bean(name = "clientServiceSec")
+    public ClientDAOSec getClientDaoSec(ClientDAO clientService) {
+        ClientDAOSec clientServiceSec = new ClientDAOSec();
+        clientServiceSec.setClientService(clientService);
+        return clientServiceSec;
     }
 
     @Bean(name = "passwordEncoder")

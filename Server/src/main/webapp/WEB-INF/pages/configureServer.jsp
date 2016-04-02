@@ -21,59 +21,47 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 </head>
 <body>
-<!--.navbar-->
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">OAuth Server</a>
+
+<jsp:include page="include/navbar.jsp"/>
+
+<!-- panel  -->
+<form role="form" class="col-md-6 col-md-offset-3" action="serverConfigured" method="post">
+
+  <div  class="panel panel-default ">
+    <div align="center" class="panel-body form-horizontal payment-form">
+
+      <div class="form-group">
+        <label for="clientId" class="col-sm-3 control-label">Client ID</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="clientId" name="clientId" value="${clientId}" required aria-disabled="true">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="scopes" class="col-sm-3 control-label">Scopes</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="scopes" name="scopes" value="${scopes}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="secret" class="col-sm-3 control-label">Secret</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="secret" name="secret" value="${secret}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-12 text-right">
+          <button type="submit" class="btn btn-default preview-add-button">
+            <span class="glyphicon glyphicon-plus"></span> Reconfigure
+          </button>
+        </div>
+      </div>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="servers"><span class="glyphicon glyphicon-cloud"></span> Table servers</a></li>
-        <li><a href="tableRegistered"><span class="glyphicon glyphicon-user"></span> Table users</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">${name} <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="logout">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-<!--/.navbar -->
-
-<div class="container">
-  <div class="row">
-    <form role="form" class="col-md-9 go-right" action="servers/serverConfigured" method="post">
-      <h2>Reconfiguring server</h2>
-      <div class="form-group">
-        <input id="name" name="name" type="text" class="form-control" value="${serverName}" required>
-        <label for="name">Server's IP</label>
-      </div>
-      <div class="form-group">
-        <input id="ip" name="ip" type="text" class="form-control" aria-valuenow="${ip}"  value="${ip}" required aria-disabled="true">
-        <label for="ip">Server's IP</label>
-      </div>
-      <div class="form-group">
-        <input id="format" name="format" type="text" class="form-control" value="${format}" required>
-        <label for="format">Server's format</label>
-      </div>
-      <button class="btn btn-sm btn-primary" type="submit">
-        Reconfigure</button>
-    </form>
   </div>
-</div>
+</form>
+<!-- / panel  -->
+
 </body>
 </html>

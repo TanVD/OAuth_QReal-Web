@@ -17,6 +17,11 @@ import java.util.Map;
 @Controller
 public class UserInfo {
 
+    /**
+     * This class is used to return authentication  information in JSON format.
+     * @return Password and id in JSON
+     * @throws IOException
+     */
     @RequestMapping(value = "/oauth/userInfo")
     @ResponseBody
     public String tokenString() throws IOException {
