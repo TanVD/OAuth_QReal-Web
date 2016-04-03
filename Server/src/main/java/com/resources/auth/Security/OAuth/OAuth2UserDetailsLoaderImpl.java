@@ -1,4 +1,4 @@
-package com.resources.auth.Config;
+package com.resources.auth.Security.OAuth;
 
 import com.racquettrack.security.oauth.OAuth2UserDetailsLoader;
 import com.resources.auth.Database.Users.User;
@@ -48,7 +48,7 @@ public class OAuth2UserDetailsLoaderImpl implements OAuth2UserDetailsLoader {
      */
     @Override
     public UserDetails updateUser(UserDetails userDetails, Map userInfo) {
-        return null;
+        return userDetails;
     }
 
     /**

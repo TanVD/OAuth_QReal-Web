@@ -7,10 +7,14 @@
     <title>Login</title>
     <link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet">
     <link href="<c:url value="/resources/css/bootstrap-social.css" />" rel="stylesheet">
+    <%--<link href="<c:url value="/resources/css/font-awesome.css" />" rel="stylesheet">--%>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
           integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
           crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" >
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"
@@ -48,9 +52,12 @@
             </c:if>
             <a href="register" class="text-center new-account">Create an account </a>
             <p class="text-center">or</p>
-            <div class="col-md-6 col-md-offset-3">
-                <a class="text-center" href="oauth/google">
-                    <button type="button" class="text-center btn btn-md btn-google ">Sign in with Google+</button>
+            <div class="col-md-offset-0 row">
+                <a class="btn btn-block btn-social btn-google " href="oauth/google?redirect=${redirect}">
+                    <span class="fa fa-google"></span>Sign in with Google+
+                </a>
+                <a class="btn btn-block btn-social btn-github" href="oauth/github?redirect=${redirect}">
+                    <span class="fa fa-github"></span>Sign  in  with Github
                 </a>
             </div>
         </div>

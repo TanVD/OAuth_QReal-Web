@@ -2,18 +2,12 @@ package com.resources.auth.Config;
 
 import com.racquettrack.security.oauth.*;
 import com.resources.auth.Config.OAuth3dProviders.GoogleConfig;
+import com.resources.auth.Security.OAuth.OAuth2UserDetailsLoaderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import com.resources.auth.Security.OAuth.MyUserApprovalHandler;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,17 +24,10 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
-import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.annotation.Resource;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Rob Winch

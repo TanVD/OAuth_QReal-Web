@@ -1,4 +1,6 @@
 package com.resources.auth;
+import com.resources.auth.Database.Client.Client;
+import com.resources.auth.Database.Client.ClientDAO;
 import com.resources.auth.Database.Users.User;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
@@ -64,6 +66,20 @@ public class AppInit implements ApplicationListener {
             userService.add(user);
 
             broadcastNewUser("123", "123");
+
+
+            ClientDAO clientService = (ClientDAO) applicationContext.getBean("clientService");
+
+            Set<String> scopes = new HashSet<String>();
+            scopes.add("read");
+            scopes.add("write");
+
+            Set<String> grantTypes = new HashSet<String>();
+            grantTypes.add("authorization_code");
+
+            Client robotsDiagram = new Client("robotsDiagram", true, "secret", true, scopes, grantTypes,
+                    64000, 64000);
+            clientService.add(robotsDiagram);
         }
     }
 

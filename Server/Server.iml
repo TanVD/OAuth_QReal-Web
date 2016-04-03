@@ -17,6 +17,7 @@
           <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/SecurityConfiguration.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/WebMVCConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth3dProviders/GoogleConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth3dProviders/GithubConfig.java</file>
         </fileset>
       </configuration>
     </facet>

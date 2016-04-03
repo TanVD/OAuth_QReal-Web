@@ -34,9 +34,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource(name = "providerGoogle")
     OAuth2AuthenticationProvider oAuthProvGoogle;
 
+    @Resource(name = "providerGithub")
+    OAuth2AuthenticationProvider oAuthProvGithub;
+
     @Autowired
     public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(oAuthProvGoogle);
+        auth.authenticationProvider(oAuthProvGithub);
         auth.userDetailsService(userServiceSec).passwordEncoder(encoder);
     }
 
