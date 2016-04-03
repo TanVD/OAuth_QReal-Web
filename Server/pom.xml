@@ -10,7 +10,7 @@
     <properties>
         <!--<spring.version>4.1.1.RELEASE</spring.version>-->
         <spring.version>4.2.1.RELEASE</spring.version>
-        <springSec.version>4.0.2.RELEASE</springSec.version>
+        <springSec.version>3.2.3.RELEASE</springSec.version>
         <!--<springSec.version>3.2.8.RELEASE</springSec.version>-->
     </properties>
 
@@ -163,6 +163,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.6.2</version>
+        </dependency>
+
+        <!--First Step Auth Lib-->
+        <dependency>
+            <groupId>com.racquettrack</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+            <version>1.6-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

@@ -30,34 +30,34 @@
 
 <jsp:include page="include/navbar.jsp"/>
 
-<c:if test="${not empty objects}">
+<%--<c:if test="${not empty objects}">--%>
   <table class="table">
     <tr>
       <th>Name</th>
       <th>IP</th>
       <th>Status</th>
     </tr>
-    <c:forEach var="o" items="${objects}">
-      <tr>
-          <td align="center">${o.name}</td>
-          <td align="center">${o.ip}</td>
-          <td align="center">
-              <c:if test="${o.connectionStateForJsp == 1}">
-                  <kbd>StandBy</kbd>
-              </c:if>
-              <c:if test="${o.connectionStateForJsp == 2}">
-                  <kbd>Waiting for answer</kbd>
-              </c:if>
-              <c:if test="${o.connectionStateForJsp == 3}">
-                  <kbd>Error</kbd>
-              </c:if>
-              <c:if test="${o.connectionStateForJsp == 4}">
-                  <kbd>Success</kbd>
-              </c:if>
-          </td>
-      </tr>
-    </c:forEach>
+    <%--<c:forEach var="o" items="${objects}">--%>
+      <%--<tr>--%>
+          <%--<td align="center">${o.name}</td>--%>
+          <%--<td align="center">${o.ip}</td>--%>
+          <%--<td align="center">--%>
+              <%--<c:if test="${o.connectionStateForJsp == 1}">--%>
+                  <%--<kbd>StandBy</kbd>--%>
+              <%--</c:if>--%>
+              <%--<c:if test="${o.connectionStateForJsp == 2}">--%>
+                  <%--<kbd>Waiting for answer</kbd>--%>
+              <%--</c:if>--%>
+              <%--<c:if test="${o.connectionStateForJsp == 3}">--%>
+                  <%--<kbd>Error</kbd>--%>
+              <%--</c:if>--%>
+              <%--<c:if test="${o.connectionStateForJsp == 4}">--%>
+                  <%--<kbd>Success</kbd>--%>
+              <%--</c:if>--%>
+          <%--</td>--%>
+      <%--</tr>--%>
+    <%--</c:forEach>--%>
   </table>
-</c:if>
+<%--</c:if>--%>
 </body>
 </html>

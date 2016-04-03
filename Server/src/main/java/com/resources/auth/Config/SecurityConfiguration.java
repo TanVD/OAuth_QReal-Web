@@ -1,4 +1,5 @@
 package com.resources.auth.Config;
+import com.racquettrack.security.oauth.OAuth2AuthenticationProvider;
 import com.resources.auth.Database.Users.UserDAO;
 import com.resources.auth.Database.Users.UserDAOSec;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.annotation.Resource;
+import javax.lang.model.element.Name;
 
 @Configuration
 @EnableWebSecurity
@@ -29,13 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource(name = "passwordEncoder")
     PasswordEncoder encoder;
 
-    @Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userServiceSec).passwordEncoder(encoder);
-    }
+    @Resource(name = "providerGoogle")
+    OAuth2AuthenticationProvider oAuthProvGoogle;
 
     @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(oAuthProvGoogle);
         auth.userDetailsService(userServiceSec).passwordEncoder(encoder);
     }
 
@@ -47,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
+
         return super.authenticationManagerBean();
     }
 
