@@ -4,6 +4,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.support.AbstractDispatcherServletInitiali
  * @author Dave Syer
  *
  */
+@Import({WebMVCConfig.class})
 public class ServletInitializer extends AbstractDispatcherServletInitializer {
 
     @Override

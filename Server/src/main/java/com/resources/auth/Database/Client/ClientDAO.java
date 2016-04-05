@@ -4,7 +4,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,7 @@ import java.util.List;
  * Created by tanvd on 02.04.16.
  */
 @Service("clientService")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Transactional
 public class ClientDAO {
 
@@ -29,12 +33,8 @@ public class ClientDAO {
      * Retrieves a single client by id
      */
     public Client get(Integer id) {
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
-        Client client = (Client) session.get(Client.class, id);
-        trans.commit();
+        Client client = session.get(Client.class, id);
         return client;
     }
 
@@ -44,13 +44,10 @@ public class ClientDAO {
      */
     public List get(String clientId) {
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
         Query query = session.createQuery("FROM Client E WHERE E.clientId = :clientId");
         query.setParameter("clientId", clientId);
         List results = query.list();
 
-        trans.commit();
         return results;
     }
 
@@ -60,13 +57,10 @@ public class ClientDAO {
      */
     public ClientDetails loadClientById(String clientId){
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
 
         Query query = session.createQuery("FROM Client E WHERE E.clientId = :clientId");
         query.setParameter("clientId", clientId);
         List<Client> results = query.list();
-        trans.commit();
         if (results.size() > 1 || results.size() == 0) {
             return null;
         }
@@ -78,11 +72,8 @@ public class ClientDAO {
      */
     public List<Client> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
         Query query = session.createQuery("FROM Client E");
         List<Client> results = query.list();
-        trans.commit();
         return results;
     }
 
@@ -94,9 +85,7 @@ public class ClientDAO {
             return;
         }
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
         session.save(client);
-        trans.commit();
     }
 
     /**
@@ -104,32 +93,21 @@ public class ClientDAO {
      */
     public void delete(Integer id) {
 
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
 
-        // Retrieve existing person first
-        Client client = (Client) session.get(Client.class, id);
+        Client client = session.get(Client.class, id);
 
-        // Delete
         session.delete(client);
-        trans.commit();
-
     }
 
     /**
      * Edits an existing client
      */
     public void edit(Client client) {
-
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
 
-        // Retrieve existing person via id
-        Client existingClient = (Client) session.get(Client.class, client.getId());
+        Client existingClient = session.get(Client.class, client.getId());
 
-        // Assign updated values to this person
         existingClient.setIdClient(client.getClientId());
         existingClient.setAccessTokenValiditySeconds(client.getAccessTokenValiditySeconds());
         existingClient.setAuthorizedGrantTypes(client.getAuthorizedGrantTypes());
@@ -141,9 +119,6 @@ public class ClientDAO {
         existingClient.setScoped(client.isScoped());
         existingClient.setSecretRequired(client.isSecretRequired());
 
-        // Save updates
         session.save(existingClient);
-        trans.commit();
-
     }
 }

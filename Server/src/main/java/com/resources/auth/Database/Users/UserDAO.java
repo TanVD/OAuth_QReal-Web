@@ -4,21 +4,30 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.pool2.proxy.CglibProxySource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import  org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
 /**
  * This is the main class for work with users tables in database.
+ * Because of not very complex logic i decided do not create separate userService
  * @author TanVD
  */
+//FIXME it may be needed to change transactional settings here (another version of propagation setting)
+    //NOTE for some reason proxyMode not working on @EnableTransactionManager level
 @Service("userService")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Transactional
 public class UserDAO {
 
@@ -34,12 +43,8 @@ public class UserDAO {
      * Retrieves a single user by id
      */
     public User get(Integer id) {
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
-        User person = (User) session.get(User.class, id);
-        trans.commit();
+        User person = session.get(User.class, id);
         return person;
     }
 
@@ -49,13 +54,9 @@ public class UserDAO {
      */
     public List get(String login) {
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
         Query query = session.createQuery("FROM User E WHERE E.username = :login");
         query.setParameter("login", login);
         List results = query.list();
-
-        trans.commit();
         return results;
     }
 
@@ -65,13 +66,10 @@ public class UserDAO {
      */
     public UserDetails loadUserByUsername(String login){
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
 
         Query query = session.createQuery("FROM User E WHERE E.username = :login");
         query.setParameter("login", login);
         List<User> results = query.list();
-        trans.commit();
         if (results.size() > 1 || results.size() == 0) {
             return null;
         }
@@ -83,11 +81,8 @@ public class UserDAO {
      */
     public List<User> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-        // Retrieve existing person first
         Query query = session.createQuery("FROM User E");
         List<User> results = query.list();
-        trans.commit();
         return results;
     }
 
@@ -99,10 +94,7 @@ public class UserDAO {
             return;
         }
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
         session.save(person);
-        trans.commit();
-
     }
 
     /**
@@ -110,40 +102,21 @@ public class UserDAO {
      */
     public void delete(Integer id) {
 
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-
-        // Retrieve existing person first
-        User person = (User) session.get(User.class, id);
-
-        // Delete
+        User person = session.get(User.class, id);
         session.delete(person);
-        trans.commit();
-
     }
 
     /**
      * Edits an existing user
      */
     public void edit(User person) {
-
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-        Transaction trans = session.beginTransaction();
-
-        // Retrieve existing person via id
-        User existingPerson = (User) session.get(User.class, person.getId());
-
-        // Assign updated values to this person
+        User existingPerson = session.get(User.class, person.getId());
         existingPerson.setUsername(person.getUsername());
         existingPerson.setPassword(person.getPassword());
         existingPerson.setAuthorities(person.getAuthorities());
-
-        // Save updates
         session.save(existingPerson);
-        trans.commit();
-
     }
 
 }

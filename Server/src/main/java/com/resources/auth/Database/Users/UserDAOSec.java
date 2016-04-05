@@ -24,7 +24,6 @@ public class UserDAOSec implements UserDetailsService{
     @Autowired
     private UserDAO userService;
 
-    @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserDetails user = userService.loadUserByUsername(login);
         if (user == null){

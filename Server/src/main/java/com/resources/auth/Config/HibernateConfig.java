@@ -13,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
@@ -23,8 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * Created by tanvd on 13.12.15.
  */
 @Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableTransactionManagement
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
+@EnableTransactionManagement(proxyTargetClass = true)
 public class HibernateConfig {
     @Bean(name = "dataSource")
     public DataSource getDataSource() {
@@ -39,7 +40,8 @@ public class HibernateConfig {
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "com.resources.auth.Database.Dialect.SQLiteDialect");
-        properties.put("hibernate.current_session_context_class", "thread");
+        //properties.put("hibernate.current_session_context_class", "thread");
+        properties.put("hibernate.show_sql", "true");
         //FIXME In production we need to add here ddl scheme and disable auto
         properties.put("hibernate.hbm2ddl.auto", "create");
         return properties;
@@ -50,22 +52,22 @@ public class HibernateConfig {
     public SessionFactory getSessionFactory(DataSource dataSource) {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
         sessionBuilder.addProperties(getHibernateProperties());
-        sessionBuilder.addAnnotatedClasses(UserAuthority.class);
-        sessionBuilder.addAnnotatedClasses(User.class);
+        sessionBuilder.addAnnotatedClasses(User.class, UserAuthority.class);
         sessionBuilder.addAnnotatedClasses(Client.class);
+        sessionBuilder.scanPackages("com.resources.auth.Database");
         return sessionBuilder.buildSessionFactory();
     }
 
     @Autowired
     @Bean(name = "transactionManager")
-    public HibernateTransactionManager getTransactionManager(
-            SessionFactory sessionFactory) {
-        HibernateTransactionManager transactionManager = new HibernateTransactionManager(
-                sessionFactory);
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory);
         return transactionManager;
     }
 
     @Autowired
+    @DependsOn("transactionManager")
     @Bean(name = "userService")
     public UserDAO getUserDao(SessionFactory sessionFactory) {
         UserDAO userService = new UserDAO();
@@ -82,6 +84,7 @@ public class HibernateConfig {
     }
 
     @Autowired
+    @DependsOn("transactionManager")
     @Bean(name = "clientService")
     public ClientDAO getClientDao(SessionFactory sessionFactory) {
         ClientDAO clientService = new ClientDAO();

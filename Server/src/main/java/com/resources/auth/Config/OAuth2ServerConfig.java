@@ -1,6 +1,7 @@
 package com.resources.auth.Config;
 
 import com.racquettrack.security.oauth.*;
+import com.resources.auth.Config.OAuth3dProviders.GithubConfig;
 import com.resources.auth.Config.OAuth3dProviders.GoogleConfig;
 import com.resources.auth.Security.OAuth.OAuth2UserDetailsLoaderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ import javax.annotation.Resource;
  * @author Rob Winch
  */
 @Configuration
-@Import({GoogleConfig.class})
+@Import({GoogleConfig.class, GithubConfig.class})
 public class OAuth2ServerConfig {
 
     private static final String SPARKLR_RESOURCE_ID = "sparklr";

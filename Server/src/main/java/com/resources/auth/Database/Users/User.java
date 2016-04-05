@@ -67,7 +67,6 @@ public class User implements Serializable, UserDetails {
     }
 
 
-
     //FIXME unchecked casts
     public Collection<GrantedAuthority> getAuthorities(){
         return (Collection<GrantedAuthority>) (Collection<?>) authorities;

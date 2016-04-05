@@ -23,7 +23,6 @@ public class ClientDAOSec implements ClientDetailsService {
     ClientDAO clientService;
 
     @Override
-    @Transactional
     public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
         ClientDetails clientDetails = clientService.loadClientById(s);
         if (clientDetails == null) {

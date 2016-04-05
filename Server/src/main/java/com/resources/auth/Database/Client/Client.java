@@ -32,6 +32,8 @@ public class Client implements ClientDetails {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
+    @CollectionTable(name="ResourceIds", joinColumns=@JoinColumn(name="ID"))
+    @Column(name="ResourceId")
     Set<String> resourceIds;
 
     @Column(name = "SecretRequired")
@@ -45,14 +47,20 @@ public class Client implements ClientDetails {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
+    @CollectionTable(name="Scopes", joinColumns=@JoinColumn(name="ID"))
+    @Column(name="Scope")
     Set<String> scope;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
+    @CollectionTable(name="AuthorizedGrantTypes", joinColumns=@JoinColumn(name="ID"))
+    @Column(name="AuthorizedGrantType")
     Set<String> authorizedGrantTypes;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
+    @CollectionTable(name="RegisteredRedirectUris", joinColumns=@JoinColumn(name="ID"))
+    @Column(name="RegisteredRedirectUri")
     Set<String> registeredRedirectUri;
 
     @Column(name = "AccessTokenValiditySeconds")
