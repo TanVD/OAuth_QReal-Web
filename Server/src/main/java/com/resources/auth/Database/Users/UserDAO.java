@@ -138,7 +138,7 @@ public class UserDAO {
         // Assign updated values to this person
         existingPerson.setUsername(person.getUsername());
         existingPerson.setPassword(person.getPassword());
-        existingPerson.setAuthority(person.getAuthority());
+        existingPerson.setAuthorities(person.getAuthorities());
 
         // Save updates
         session.save(existingPerson);

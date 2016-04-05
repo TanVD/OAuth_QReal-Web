@@ -23,7 +23,7 @@ public class Client implements ClientDetails {
     static Integer idInc = 0;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id = 0;
 

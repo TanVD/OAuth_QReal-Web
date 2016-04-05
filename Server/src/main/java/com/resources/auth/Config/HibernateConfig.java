@@ -28,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class HibernateConfig {
     @Bean(name = "dataSource")
     public DataSource getDataSource() {
+        //Using basic datasource with supply of connection pool
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.sqlite.JDBC");
         dataSource.setUrl("jdbc:sqlite:src/main/DataBase/crew.db");
@@ -39,6 +40,7 @@ public class HibernateConfig {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "com.resources.auth.Database.Dialect.SQLiteDialect");
         properties.put("hibernate.current_session_context_class", "thread");
+        //FIXME In production we need to add here ddl scheme and disable auto
         properties.put("hibernate.hbm2ddl.auto", "create");
         return properties;
     }
@@ -48,6 +50,7 @@ public class HibernateConfig {
     public SessionFactory getSessionFactory(DataSource dataSource) {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
         sessionBuilder.addProperties(getHibernateProperties());
+        sessionBuilder.addAnnotatedClasses(UserAuthority.class);
         sessionBuilder.addAnnotatedClasses(User.class);
         sessionBuilder.addAnnotatedClasses(Client.class);
         return sessionBuilder.buildSessionFactory();
@@ -59,7 +62,6 @@ public class HibernateConfig {
             SessionFactory sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager(
                 sessionFactory);
-
         return transactionManager;
     }
 

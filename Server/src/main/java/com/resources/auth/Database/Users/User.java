@@ -4,13 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.security.Identity;
 import java.util.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * This is a class of user.
@@ -19,12 +16,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "USERS")
 public class User implements Serializable, UserDetails {
-    static Integer idInc = 0;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id = 0;
+    private Integer id;
 
     @Column(name = "LOGIN")
     private String username;
@@ -32,48 +28,17 @@ public class User implements Serializable, UserDetails {
     @Column(name = "PASSWORD")
     private String password;
 
-    /**
-     * Because of some problems with List<Authorities> (in moment of saving to database)
-     * we save authorities serialized to string.
-     */
-    @Column(name = "AUTHORITIES")
-    private String authority;
-
-    /**
-     * Converts serialized in string authorities into set
-     */
-    private Set<GrantedAuthority> convertStringToSet(String authority)
-    {
-        Set<GrantedAuthority> userRoles = new HashSet<GrantedAuthority>();
-        for (String str : authority.split("\\s+")) {
-            userRoles.add(new UserAuthority(str));
-        }
-        return userRoles;
-    }
-
-    /**
-     * Serialize set of authorities into string
-     */
-    private String convertSetToString(Collection<GrantedAuthority> userAuthorities)
-    {
-        String userRoles = new String();
-        for (GrantedAuthority auth : userAuthorities)
-        {
-            userRoles += auth.getAuthority() + " ";
-        }
-        return userRoles;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.EAGER)
+    private Collection<UserAuthority> authorities;
 
     public User(){
-        idInc++;
     }
 
     public User(String username, String password, Collection<GrantedAuthority> authority) {
-        idInc += 1;
-        this.id = idInc;
         this.username = username;
         this.password = password;
-        this.authority = convertSetToString(authority);
+        setAuthorities(authority);
     }
 
     public Integer getId() {
@@ -102,21 +67,18 @@ public class User implements Serializable, UserDetails {
     }
 
 
-    public String getAuthority() {
-        return authority;
-    }
 
-    public void setAuthority(String authority) {
-
-        this.authority = authority;
-    }
-
+    //FIXME unchecked casts
     public Collection<GrantedAuthority> getAuthorities(){
-        return convertStringToSet(authority);
+        return (Collection<GrantedAuthority>) (Collection<?>) authorities;
     }
 
-    public void setAuthorities(Collection<GrantedAuthority> authority) {
-        this.authority = convertSetToString(authority);
+    public void setAuthorities(Collection<GrantedAuthority> authorities) {
+        for (GrantedAuthority authority : authorities) {
+            UserAuthority authorityCasted = (UserAuthority) authority;
+            authorityCasted.setUser(this);
+        }
+        this.authorities = (Collection<UserAuthority>) (Collection<?>) authorities;
     }
 
     public boolean isEnabled() {
@@ -136,7 +98,9 @@ public class User implements Serializable, UserDetails {
     }
 
     public boolean isAdmin() {
-        return authority.contains("ROLE_ADMIN");
+        UserAuthority authorityAdmin = new UserAuthority("ROLE_ADMIN");
+        authorityAdmin.setUser(this);
+        return authorities.contains(authorityAdmin);
     }
 }
 

@@ -1,7 +1,10 @@
 package com.resources.auth.Security;
 
 import com.resources.auth.Database.Users.User;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Collection;
 
 /**
  * This class represent authentication object of user.
@@ -18,6 +21,10 @@ public class AuthenticatedUser {
 
     public static String getAuthenticatedUserAuthority() {
         User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return authenticatedUser.getAuthority();
+        String auth = "";
+        for (GrantedAuthority authority : authenticatedUser.getAuthorities()) {
+            auth += authority.getAuthority() + " ";
+        }
+        return auth;
     }
 }

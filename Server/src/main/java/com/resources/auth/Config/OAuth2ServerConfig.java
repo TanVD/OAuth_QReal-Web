@@ -53,8 +53,7 @@ public class OAuth2ServerConfig {
             http
                     // Since we want the protected resources to be accessible in the UI as well we need
                     // session creation to be allowed (it's disabled by default in 2.0.6)
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                    .and()
+
                     .requestMatchers().antMatchers("/oauth/userInfo")
                     .and()
                     .authorizeRequests()
