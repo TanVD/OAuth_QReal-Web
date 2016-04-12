@@ -22,6 +22,7 @@ import java.util.Set;
  * Created by tanvd on 08.11.15.
  */
 @Controller
+@RequestMapping("tableRegistered")
 public class UsersController {
     @Resource(name="userService")
     private UserDAO userService;
@@ -35,12 +36,12 @@ public class UsersController {
         return table;
     }
 
-    @RequestMapping(value = "tableRegistered", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView tableUsersPrepare(ModelMap model, HttpServletRequest request) {
         return prepareTableRegistered();
     }
 
-    @RequestMapping(value = "tableRegistered/grantUserAdminRights/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "grantUserAdminRights/{name}", method = RequestMethod.POST)
     public String tableUsersGrantAdmin(@PathVariable("name") String name) {
         List<User> usersList = userService.get(name);
         User user = usersList.get(0);
@@ -52,7 +53,7 @@ public class UsersController {
         return "redirect:/tableRegistered";
     }
 
-    @RequestMapping(value = "tableRegistered/withdrawUserAdminRights/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "withdrawUserAdminRights/{name}", method = RequestMethod.POST)
     public String tableUsersWithdrawAdmin(@PathVariable("name") String name) {
         List<User> usersList = userService.get(name);
         User user = usersList.get(0);

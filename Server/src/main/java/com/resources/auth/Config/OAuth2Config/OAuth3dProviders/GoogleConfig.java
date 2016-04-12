@@ -1,4 +1,4 @@
-package com.resources.auth.Config.OAuth3dProviders;
+package com.resources.auth.Config.OAuth2Config.OAuth3dProviders;
 
 import com.racquettrack.security.oauth.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 
@@ -25,22 +26,21 @@ import java.util.Map;
  * Created by tanvd on 03.04.16.
  */
 @Configuration
-public class GithubConfig {
-
+public class GoogleConfig {
     @Configuration
-    @PropertySource("classpath:oauthGithub.properties")
+    @PropertySource("classpath:oauthGoogle.properties")
     protected static class OAuthAuthentication {
 
 
-        @Bean(name = "propertiesGithub")
-        public OAuth2ServiceProperties oAuth2ServicePropertiesGithub(
-                @Value("${github.accessTokenUri}") String accessTokenUri,
-                @Value("${github.userAuthorizationUri}") String userAuthorizationUri,
-                @Value("${github.userInfoUri}") String userInfoUri,
-                @Value("${github.clientId}") String clientId,
-                @Value("${github.clientSecret}") String clientSecret,
-                @Value("${github.redirectURI}") String redirectURI,
-                @Value("${github.scope}") String scope
+        @Bean(name = "propertiesGoogle")
+        public OAuth2ServiceProperties oAuth2ServicePropertiesGoogle(
+                @Value("${google.accessTokenUri}") String accessTokenUri,
+                @Value("${google.userAuthorizationUri}") String userAuthorizationUri,
+                @Value("${google.userInfoUri}") String userInfoUri,
+                @Value("${google.clientId}") String clientId,
+                @Value("${google.clientSecret}") String clientSecret,
+                @Value("${google.redirectURI}") String redirectURI,
+                @Value("${google.scope}") String scope
         ) throws URISyntaxException {
             OAuth2ServiceProperties details = new OAuth2ServiceProperties();
             details.setUserAuthorisationUri(userAuthorizationUri);
@@ -59,10 +59,11 @@ public class GithubConfig {
         }
 
 
-        @Bean(name = "userDetailsServiceGithub")
+
+        @Bean(name = "userDetailsServiceGoogle")
         @Autowired
-        public OAuth2UserDetailsService<User> oAuth2UserDetailsServiceGithub(@Qualifier("propertiesGithub") OAuth2ServiceProperties serviceProperties,
-                                                                             OAuth2UserDetailsLoader detailsLoader) throws URISyntaxException {
+        public OAuth2UserDetailsService<User> oAuth2UserDetailsServiceGoogle(@Qualifier("propertiesGoogle") OAuth2ServiceProperties serviceProperties,
+                                                                       OAuth2UserDetailsLoader detailsLoader) throws URISyntaxException {
             OAuth2UserDetailsService service = new OAuth2UserDetailsService();
             service.setoAuth2ServiceProperties(serviceProperties);
             service.setoAuth2UserDetailsLoader(detailsLoader);
@@ -72,10 +73,10 @@ public class GithubConfig {
             return service;
         }
 
-        @Bean(name = "providerGithub")
+        @Bean(name = "providerGoogle")
         @Autowired
-        public OAuth2AuthenticationProvider oAuth2AuthenticationProviderGithub(@Qualifier("propertiesGithub") OAuth2ServiceProperties serviceProperties,
-                                                                               @Qualifier("userDetailsServiceGithub") OAuth2UserDetailsService<User> details)
+        public OAuth2AuthenticationProvider oAuth2AuthenticationProviderGoogle(@Qualifier("propertiesGoogle") OAuth2ServiceProperties serviceProperties,
+                                                                               @Qualifier("userDetailsServiceGoogle")OAuth2UserDetailsService<User> details)
                                                                                throws URISyntaxException {
             OAuth2AuthenticationProvider authProv = new OAuth2AuthenticationProvider();
             authProv.setAuthenticatedUserDetailsService(details);
@@ -83,9 +84,9 @@ public class GithubConfig {
             return authProv;
         }
 
-        @Bean(name = "entryPointGithub")
+        @Bean(name = "entryPointGoogle")
         @Autowired
-        public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPointGithub(@Qualifier("propertiesGithub") OAuth2ServiceProperties serviceProperties)
+        public OAuth2AuthenticationEntryPoint oAuth2AuthenticationEntryPointGoogle(@Qualifier("propertiesGoogle") OAuth2ServiceProperties serviceProperties)
                                                                                    throws URISyntaxException {
             OAuth2AuthenticationEntryPoint entry = new OAuth2AuthenticationEntryPoint();
             entry.setoAuth2ServiceProperties(serviceProperties);
@@ -93,21 +94,21 @@ public class GithubConfig {
         }
     }
 
-    @Configuration
-    @Order(98)
-    protected static class OAuthGithubAuth extends WebSecurityConfigurerAdapter {
+    @Configuration("OAuthGoogleAuth")
+    @Order(99)
+    protected static class OAuthGoogleAuth extends WebSecurityConfigurerAdapter {
 
-        @Resource(name = "filterGithub")
-        OAuth2AuthenticationFilter filterGithub;
+        @Resource(name = "filterGoogle")
+        OAuth2AuthenticationFilter filterGoogle;
 
-        @Resource(name = "entryPointGithub")
-        OAuth2AuthenticationEntryPoint oAuthEntryPointGithub;
+        @Resource(name = "entryPointGoogle")
+        OAuth2AuthenticationEntryPoint oAuthEntryPointGoogle;
 
-        @Bean(name = "filterGithub")
+        @Bean(name = "filterGoogle")
         @Autowired
-        public OAuth2AuthenticationFilter oAuth2AuthenticationFilter(@Qualifier("propertiesGithub") OAuth2ServiceProperties serviceProperties,
+        public OAuth2AuthenticationFilter oAuth2AuthenticationFilter(@Qualifier("propertiesGoogle") OAuth2ServiceProperties serviceProperties,
                                                                      AuthenticationManager manager) throws Exception {
-            OAuth2AuthenticationFilter filter = new OAuth2AuthenticationFilter("/oauth/callback/github");
+            OAuth2AuthenticationFilter filter = new OAuth2AuthenticationFilter("/oauth/callback/google");
             filter.setAuthenticationManager(manager);
             filter.setoAuth2ServiceProperties(serviceProperties);
             return filter;
@@ -116,23 +117,23 @@ public class GithubConfig {
 
         //.csrf() is optional, enabled by default, if using WebSecurityConfigurerAdapter constructor
         @Override
-        @DependsOn("filterGithub")
+        @DependsOn("filterGoogle")
         protected void configure(HttpSecurity httpSecurity) throws Exception {
 
             httpSecurity.authorizeRequests()
                     .and()
-                    .requestMatchers().antMatchers("/oauth/callback/github", "/oauth/github**")
+                    .requestMatchers().antMatchers("/oauth/callback/google", "/oauth/google**")
 
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/oauth/callback/github").permitAll()
-                    .antMatchers("/oauth/github**").authenticated()
+                    .antMatchers("/oauth/callback/google").permitAll()
+                    .antMatchers("/oauth/google**").authenticated()
 
                     .and()
                     .httpBasic()
-                    .authenticationEntryPoint(oAuthEntryPointGithub)
+                    .authenticationEntryPoint(oAuthEntryPointGoogle)
                     .and()
-                    .addFilterAfter(filterGithub, ExceptionTranslationFilter.class)
+                    .addFilterAfter(filterGoogle, ExceptionTranslationFilter.class)
                     .csrf().disable();
 
         }

@@ -11,13 +11,13 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/HibernateConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/MethodSecurityConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth2ServerConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/SecurityConfiguration.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/WebMVCConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth3dProviders/GoogleConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth3dProviders/GithubConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth2Config/OAuth3dProviders/GithubConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth2Config/OAuth3dProviders/GoogleConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/SecurityConfig/MethodSecurityConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/OAuth2Config/OAuth2ServerConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/SecurityConfig/SecurityConfiguration.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/resources/auth/Config/DatabaseConfig/HibernateConfig.java</file>
         </fileset>
       </configuration>
     </facet>

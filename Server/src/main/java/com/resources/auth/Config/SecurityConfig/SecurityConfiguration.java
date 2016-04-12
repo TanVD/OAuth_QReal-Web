@@ -1,4 +1,4 @@
-package com.resources.auth.Config;
+package com.resources.auth.Config.SecurityConfig;
 import com.racquettrack.security.oauth.OAuth2AuthenticationProvider;
 import com.resources.auth.Database.Users.UserDAO;
 import com.resources.auth.Database.Users.UserDAOSec;
@@ -44,15 +44,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userServiceSec).passwordEncoder(encoder);
     }
 
+    //Security should ignore some urls (for static files permited to all)
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/webjars/**", "/images/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
+        web.ignoring().antMatchers("/webjars/**", "/images/**", "/resources/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
     }
 
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
-
         return super.authenticationManagerBean();
     }
 
@@ -61,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
                 .requestMatchers()
-                .antMatchers("/*", "/tableRegistered/**", "/servers/**", "/register/**", "/resources/**", "/oauth/authorize")
+                .antMatchers("/*", "/tableRegistered**", "/servers/**", "/register/**", "/resources/**", "/oauth/authorize")
                 .and()
 
                 .exceptionHandling()
@@ -69,42 +69,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/oauth/authorize")
+                .antMatchers("/")
+                .authenticated()
+                .and()
+
+                .authorizeRequests()
+                .antMatchers("/oauth/authorize", "/userServers")
                 .hasRole("USER")
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/tableRegistered/**")
+                .antMatchers("/tableRegistered/**", "/servers/**")
                 .hasRole("ADMIN")
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/servers/**")
-                .hasRole("ADMIN")
-                .and()
-
-                .authorizeRequests()
-                .antMatchers("/userServers")
-                .hasRole("USER")
-                .and()
-
-                .authorizeRequests()
-                .antMatchers("/tableRegistered/**")
-                .hasRole("ADMIN")
-                .and()
-
-                .authorizeRequests()
-                .antMatchers("/logErr")
-                .permitAll()
-                .and()
-
-                .authorizeRequests()
-                .antMatchers( "/register**")
-                .permitAll()
-                .and()
-
-                .authorizeRequests()
-                .antMatchers("/resources/**")
+                .antMatchers("/log", "/logErr", "/register**")
                 .permitAll()
                 .and()
 
@@ -118,11 +98,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .formLogin()
-                .loginPage("/")
+                .loginPage("/log")
                 .failureUrl("/logErr")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/routeRole")
+                .defaultSuccessUrl("/")
                 .loginProcessingUrl("/login");
         // @formatter:on
     }

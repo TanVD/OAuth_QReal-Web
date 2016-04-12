@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class RouteRoleController {
-    @RequestMapping(value = "routeRole", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String routeRole(ModelMap model) {
         String role = AuthenticatedUser.getAuthenticatedUserAuthority();
         if (role.contains("ROLE_ADMIN")) {

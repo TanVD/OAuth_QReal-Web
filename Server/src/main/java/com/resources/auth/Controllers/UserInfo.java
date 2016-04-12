@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Created by tanvd on 01.04.16.
  */
 @Controller
+@RequestMapping("oauth")
 public class UserInfo {
 
     /**
@@ -22,7 +24,7 @@ public class UserInfo {
      * @return Password and id in JSON
      * @throws IOException
      */
-    @RequestMapping(value = "/oauth/userInfo")
+    @RequestMapping(value = "userInfo", method = RequestMethod.GET)
     @ResponseBody
     public String tokenString() throws IOException {
         User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

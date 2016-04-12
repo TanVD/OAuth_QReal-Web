@@ -1,15 +1,15 @@
-package com.resources.auth.Config;
+package com.resources.auth.Config.OAuth2Config;
 
 import com.racquettrack.security.oauth.*;
-import com.resources.auth.Config.OAuth3dProviders.GithubConfig;
-import com.resources.auth.Config.OAuth3dProviders.GoogleConfig;
+import com.resources.auth.Config.OAuth2Config.OAuth3dProviders.GithubConfig;
+import com.resources.auth.Config.OAuth2Config.OAuth3dProviders.GoogleConfig;
 import com.resources.auth.Security.OAuth.OAuth2UserDetailsLoaderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import com.resources.auth.Security.OAuth.MyUserApprovalHandler;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -37,16 +37,21 @@ import javax.annotation.Resource;
 @Import({GoogleConfig.class, GithubConfig.class})
 public class OAuth2ServerConfig {
 
-    private static final String SPARKLR_RESOURCE_ID = "sparklr";
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+//    private static final String SPARKLR_RESOURCE_ID = "sparklr";
 
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) {
-            resources.resourceId(SPARKLR_RESOURCE_ID).stateless(false);
-        }
+//        @Override
+//        public void configure(ResourceServerSecurityConfigurer resources) {
+//            resources.resourceId(SPARKLR_RESOURCE_ID).stateless(false);
+//        }
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
@@ -107,10 +112,6 @@ public class OAuth2ServerConfig {
         }
 
     }
-
-
-
-
 
     @Configuration
     protected static class Stuff {

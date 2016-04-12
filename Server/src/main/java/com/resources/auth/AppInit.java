@@ -78,7 +78,7 @@ public class AppInit implements ApplicationListener {
             grantTypes.add("authorization_code");
 
             Client robotsDiagram = new Client("robotsDiagram", true, "secret", true, scopes, grantTypes,
-                    64000, 64000);
+                    64000, 64000, true);
             clientService.add(robotsDiagram);
         }
     }

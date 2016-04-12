@@ -1,4 +1,4 @@
-package com.resources.auth.Security.OAuth;
+package com.resources.auth.Controllers;
 
 /**
  * Created by tanvd on 05.12.15.

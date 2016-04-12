@@ -18,9 +18,10 @@ import java.util.Optional;
  * Created by tanvd on 03.04.16.
  */
 @Controller
+@RequestMapping("oauth")
 public class oAuthRedirectController {
 
-    @RequestMapping(value = {"/oauth/google"},  method = RequestMethod.GET)
+    @RequestMapping(value = {"google"},  method = RequestMethod.GET)
     public String routeGoogle(@RequestParam("redirect") Optional<String> redirect, ModelMap model) throws UnsupportedEncodingException {
         if (redirect.isPresent() && redirect.get() != "")
         {
@@ -37,7 +38,7 @@ public class oAuthRedirectController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = {"/oauth/github"},  method = RequestMethod.GET)
+    @RequestMapping(value = {"github"},  method = RequestMethod.GET)
     public String routeGithub(@RequestParam("redirect") Optional<String> redirect, ModelMap model) throws UnsupportedEncodingException {
         if (redirect.isPresent() && redirect.get() != "")
         {

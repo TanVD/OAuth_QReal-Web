@@ -38,7 +38,7 @@ public class LoginController {
     private @Autowired
     HttpServletResponse response;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
     public String login(ModelMap model) throws UnsupportedEncodingException {
 
         SavedRequest savedRequest =  new HttpSessionRequestCache().getRequest(request, response);

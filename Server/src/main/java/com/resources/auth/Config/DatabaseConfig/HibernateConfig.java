@@ -1,4 +1,4 @@
-package com.resources.auth.Config;
+package com.resources.auth.Config.DatabaseConfig;
 
 import java.util.Properties;
 

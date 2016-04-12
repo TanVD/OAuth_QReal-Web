@@ -79,7 +79,8 @@ public class Client implements ClientDetails {
 
     public Client(String clientId, boolean isSecretRequired, String clientSecret,
                   boolean isScoped, Set<String> scope, Set<String> authorizedGrantTypes,
-                  Integer accessTokenValiditySeconds, Integer refreshTokenValiditySeconds)
+                  Integer accessTokenValiditySeconds, Integer refreshTokenValiditySeconds,
+                  boolean isAutoApprove)
     {
         id = idInc;
         this.clientId = clientId;
@@ -90,6 +91,7 @@ public class Client implements ClientDetails {
         this.authorizedGrantTypes = authorizedGrantTypes;
         this.accessTokenValiditySeconds = accessTokenValiditySeconds;
         this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
+        this.isAutoApprove = isAutoApprove;
 
         idInc++;
     }

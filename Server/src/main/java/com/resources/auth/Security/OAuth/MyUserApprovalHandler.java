@@ -1,15 +1,16 @@
 package com.resources.auth.Security.OAuth;
 
 
-        import java.util.Collection;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.AuthorizationRequest;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
 
-        import org.springframework.security.core.Authentication;
-        import org.springframework.security.oauth2.provider.AuthorizationRequest;
-        import org.springframework.security.oauth2.provider.ClientDetails;
-        import org.springframework.security.oauth2.provider.ClientDetailsService;
-        import org.springframework.security.oauth2.provider.ClientRegistrationException;
-        import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler;
+import java.util.Collection;
 
+//Class used for white list of approvals
 public class MyUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
 
     private boolean useApprovalStore = true;
@@ -37,8 +38,7 @@ public class MyUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
      * Allows automatic approval for a white list of clients in the implicit grant case.
      *
      * @param authorizationRequest The authorization request.
-     * @param userAuthentication the current user authentication
-     *
+     * @param userAuthentication   the current user authentication
      * @return An updated request if it has already been approved by the current user.
      */
     @Override
@@ -50,8 +50,7 @@ public class MyUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
         if (useApprovalStore) {
             authorizationRequest = super.checkForPreApproval(authorizationRequest, userAuthentication);
             approved = authorizationRequest.isApproved();
-        }
-        else {
+        } else {
             if (clientDetailsService != null) {
                 Collection<String> requestedScopes = authorizationRequest.getScope();
                 try {
@@ -63,8 +62,7 @@ public class MyUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
                             break;
                         }
                     }
-                }
-                catch (ClientRegistrationException e) {
+                } catch (ClientRegistrationException e) {
                 }
             }
         }
