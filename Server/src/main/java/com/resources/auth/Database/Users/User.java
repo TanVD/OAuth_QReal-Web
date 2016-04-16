@@ -72,6 +72,14 @@ public class User implements Serializable, UserDetails {
         return (Collection<GrantedAuthority>) (Collection<?>) authorities;
     }
 
+    public Collection<String> getAuthoritiesInStringList() {
+        Collection<String> collection = new ArrayList<String>();
+        for (UserAuthority authority : authorities) {
+            collection.add(authority.getAuthority());
+        }
+        return collection;
+    }
+
     public void setAuthorities(Collection<GrantedAuthority> authorities) {
         for (GrantedAuthority authority : authorities) {
             UserAuthority authorityCasted = (UserAuthority) authority;

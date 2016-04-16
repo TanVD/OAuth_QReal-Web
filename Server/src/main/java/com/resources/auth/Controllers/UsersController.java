@@ -3,7 +3,9 @@ package com.resources.auth.Controllers;
 import com.resources.auth.Database.Users.User;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
-import com.resources.auth.Security.AuthenticatedUser;
+import com.resources.auth.Security.Utils.AuthenticatedUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,6 +26,9 @@ import java.util.Set;
 @Controller
 @RequestMapping("tableRegistered")
 public class UsersController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
+
     @Resource(name="userService")
     private UserDAO userService;
 
@@ -50,6 +55,7 @@ public class UsersController {
         authorities.add(new UserAuthority("ROLE_USER"));
         user.setAuthorities(authorities);
         userService.edit(user);
+        logger.trace("User {} now has admin rights", user.getId());
         return "redirect:/tableRegistered";
     }
 
@@ -61,6 +67,7 @@ public class UsersController {
         authorities.add(new UserAuthority("ROLE_USER"));
         user.setAuthorities(authorities);
         userService.edit(user);
+        logger.trace("Admin {} lost admin rights", user.getId());
         return "redirect:/tableRegistered";
     }
 }

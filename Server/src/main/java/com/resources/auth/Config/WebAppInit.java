@@ -6,6 +6,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.util.Log4jConfigListener;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -23,6 +24,7 @@ public class WebAppInit implements WebApplicationInitializer {
         rootContext.scan("com.resources.auth.Database");
         rootContext.register(AppInit.class);
 
+        //servletContext.addListener(Log4j.class);
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         //Dispatcher context contains controllers objects, security objects and mvc config

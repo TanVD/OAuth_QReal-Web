@@ -41,7 +41,7 @@ public class HibernateConfig {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "com.resources.auth.Database.Dialect.SQLiteDialect");
         //properties.put("hibernate.current_session_context_class", "thread");
-        properties.put("hibernate.show_sql", "true");
+        //properties.put("hibernate.show_sql", "true");
         //FIXME In production we need to add here ddl scheme and disable auto
         properties.put("hibernate.hbm2ddl.auto", "create");
         return properties;

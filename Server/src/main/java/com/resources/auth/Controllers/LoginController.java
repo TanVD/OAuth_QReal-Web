@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.resources.auth.Database.Users.UserDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -27,6 +29,9 @@ import java.net.URLEncoder;
 @Controller
 public class LoginController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+
     @Resource(name="userService")
     private UserDAO userService;
 
@@ -44,10 +49,12 @@ public class LoginController {
         SavedRequest savedRequest =  new HttpSessionRequestCache().getRequest(request, response);
 
         if (savedRequest != null) {
-            String request = savedRequest.getRedirectUrl();
+            String redirectUrl = savedRequest.getRedirectUrl();
 
-            String redirect = URLEncoder.encode(request, "UTF-8");
-            model.addAttribute("redirect", redirect);
+            String redirectUrlEncoded = URLEncoder.encode(redirectUrl, "UTF-8");
+            model.addAttribute("redirect", redirectUrlEncoded);
+            logger.trace("Someone came to login page with not clean redirect. Added redirect {} to links on page.", redirectUrl);
+
         }
 
         model.addAttribute("error", false);

@@ -4,6 +4,9 @@ import com.racquettrack.security.oauth.OAuth2UserDetailsLoader;
 import com.resources.auth.Database.Users.User;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
+import com.resources.auth.Security.Utils.RandomStringGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +24,8 @@ import java.util.Set;
  */
 public class OAuth2UserDetailsLoaderImpl implements OAuth2UserDetailsLoader {
 
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2UserDetailsLoaderImpl.class);
+
     @Resource(name = "userService")
     UserDAO userService;
 
@@ -36,6 +41,9 @@ public class OAuth2UserDetailsLoaderImpl implements OAuth2UserDetailsLoader {
      */
     @Override
     public UserDetails getUserByUserId(Object id) {
+        //TODO Here is vulnarebility, cause someone can login with id from github to user registrated with google.
+        //TODO But Google and Github makes email verification so it is not really bad. But in future we need to fix it.
+        logger.trace("Someone trying to login through oauth with {} username", id.toString());
         UserDetails user = userService.loadUserByUsername(id.toString());
         return user;
     }
@@ -64,15 +72,9 @@ public class OAuth2UserDetailsLoaderImpl implements OAuth2UserDetailsLoader {
         if (!userService.get(id.toString()).isEmpty()) {
             throw  new IllegalArgumentException("Registration defined needed by oauth, but user already registered");
         }
-        //FIXME adding just password is not secured at all
-        Object passwordObj = userInfo.get("password");
-        String password;
-        if (passwordObj == null) {
-            password = "password";
-        }
-        else {
-            password = passwordObj.toString();
-        }
+
+        //Creating random password, login via standard login form shouldn't be accessible for oauth registrated users
+        String password = RandomStringGenerator.generateString(20);
 
 
         User user = new User();
@@ -84,6 +86,7 @@ public class OAuth2UserDetailsLoaderImpl implements OAuth2UserDetailsLoader {
         authorities.add(authority);
         user.setAuthorities(authorities);
         userService.add(user);
+        logger.trace("New user created from oauth with {} username", id.toString());
         return user;
     }
 

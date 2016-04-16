@@ -2,7 +2,7 @@ package com.resources.auth.Controllers;
 
 import com.resources.auth.Database.Client.Client;
 import com.resources.auth.Database.Client.ClientDAO;
-import com.resources.auth.Security.AuthenticatedUser;
+import com.resources.auth.Security.Utils.AuthenticatedUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;

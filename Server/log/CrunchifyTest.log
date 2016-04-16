@@ -1,0 +1,9 @@
+2016-04-15 22:30:50,546 [localhost-startStop-1] INFO  Version:37 - HHH000412: Hibernate Core {5.0.2.Final}
+2016-04-15 22:30:50,553 [localhost-startStop-1] INFO  Environment:213 - HHH000206: hibernate.properties not found
+2016-04-15 22:30:50,556 [localhost-startStop-1] INFO  Environment:317 - HHH000021: Bytecode provider name : javassist
+2016-04-15 22:30:50,638 [localhost-startStop-1] INFO  Version:66 - HCANN000001: Hibernate Commons Annotations {5.0.0.Final}
+2016-04-15 22:30:50,895 [localhost-startStop-1] INFO  Dialect:154 - HHH000400: Using dialect: com.resources.auth.Database.Dialect.SQLiteDialect
+2016-04-15 22:30:50,948 [localhost-startStop-1] INFO  LobCreatorBuilderImpl:98 - HHH000423: Disabling contextual LOB creation as JDBC driver reported JDBC version [2] less than 4
+2016-04-15 22:30:51,750 [localhost-startStop-1] INFO  SchemaExport:400 - HHH000227: Running hbm2ddl schema export
+2016-04-15 22:30:54,154 [localhost-startStop-1] INFO  SchemaExport:463 - HHH000230: Schema export complete
+2016-04-15 22:30:54,618 [localhost-startStop-1] INFO  QueryTranslatorFactoryInitiator:47 - HHH000397: Using ASTQueryTranslatorFactory

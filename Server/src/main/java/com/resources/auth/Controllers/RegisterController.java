@@ -10,6 +10,8 @@ import java.io.*;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
 import com.resources.auth.Database.Users.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,10 @@ import java.util.Set;
 
 @Controller
 public class RegisterController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+
+
     @Resource(name="userService")
     private UserDAO userService;
 
@@ -36,7 +42,7 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "registerCheck", method = RequestMethod.POST)
-    public String userCheck(ModelMap model, HttpServletRequest request) throws IOException{
+    public String registerCheck(ModelMap model, HttpServletRequest request) throws IOException{
         String name = request.getParameter("login");
         String pwd1 = request.getParameter("pwd1");
         String pwd2 = request.getParameter("pwd2");
@@ -57,7 +63,8 @@ public class RegisterController {
 
         User user = new User(name, passwordEncoder.encode(pwd1), authorities);
         userService.add(user);
-//        broadcastToServers(user);
+        logger.trace("User {} registered through standard way", user.getUsername());
+
         return "redirect:/";
     }
 }

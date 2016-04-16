@@ -7,6 +7,9 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.resources.auth.Security.Utils.AuthenticatedUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
@@ -28,6 +31,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccessConfirmationController.class);
 
     @Autowired
     private ClientDetailsService clientDetailsService;
@@ -52,6 +57,8 @@ public class AccessConfirmationController {
             }
         }
         model.put("scopes", scopes);
+        logger.trace("User {} authorizing client {} for scopes {}", AuthenticatedUser.getAuthenticatedUserName(),
+                client.getClientId(), client.getScope().toString());
         return new ModelAndView("access_confirmation", model);
     }
 
@@ -60,6 +67,7 @@ public class AccessConfirmationController {
         // We can add more stuff to the model here for JSP rendering. If the client was a machine then
         // the JSON will already have been rendered.
         model.put("message", "There was a problem with the OAuth2 protocol");
+        logger.debug("Some problem with oauth encountered for user {}", AuthenticatedUser.getAuthenticatedUserName());
         return "oauth_error";
     }
 

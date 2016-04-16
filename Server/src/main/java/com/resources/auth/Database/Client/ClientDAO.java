@@ -4,6 +4,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -22,6 +24,9 @@ import java.util.List;
 @Transactional
 public class ClientDAO {
 
+    private static final Logger logger = LoggerFactory.getLogger(ClientDAO.class);
+
+
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -35,6 +40,8 @@ public class ClientDAO {
     public Client get(Integer id) {
         Session session = sessionFactory.getCurrentSession();
         Client client = session.get(Client.class, id);
+        logger.trace("Client {} taken from database using id {}", client.getClientId(), id);
+
         return client;
     }
 
@@ -47,7 +54,12 @@ public class ClientDAO {
         Query query = session.createQuery("FROM Client E WHERE E.clientId = :clientId");
         query.setParameter("clientId", clientId);
         List results = query.list();
-
+        if (results.isEmpty()) {
+            logger.trace("Client {} was not found using client id", clientId);
+        }
+        else {
+            logger.trace("Client taken from database using client id {}", clientId);
+        }
         return results;
     }
 
@@ -62,8 +74,10 @@ public class ClientDAO {
         query.setParameter("clientId", clientId);
         List<Client> results = query.list();
         if (results.size() > 1 || results.size() == 0) {
+            logger.trace("Client {} was not found using client id", clientId);
             return null;
         }
+        logger.trace("Client taken from database using client id {}", clientId);
         return results.get(0);
     }
 
@@ -74,6 +88,7 @@ public class ClientDAO {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("FROM Client E");
         List<Client> results = query.list();
+        logger.trace("{} clients were loaded from database", results.size());
         return results;
     }
 
@@ -86,18 +101,18 @@ public class ClientDAO {
         }
         Session session = sessionFactory.getCurrentSession();
         session.save(client);
+        logger.trace("{} client was saved to database", client.getClientId());
+
     }
 
     /**
      * Deletes an existing client by id
      */
     public void delete(Integer id) {
-
         Session session = sessionFactory.getCurrentSession();
-
         Client client = session.get(Client.class, id);
-
         session.delete(client);
+        logger.trace("{} client with id {} was deleted from database", client.getClientId(), id);
     }
 
     /**
@@ -120,5 +135,7 @@ public class ClientDAO {
         existingClient.setSecretRequired(client.isSecretRequired());
 
         session.save(existingClient);
+        logger.trace("{} client was edited in database", existingClient.getClientId());
+
     }
 }

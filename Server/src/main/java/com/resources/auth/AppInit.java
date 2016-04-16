@@ -4,6 +4,9 @@ import com.resources.auth.Database.Client.ClientDAO;
 import com.resources.auth.Database.Users.User;
 import com.resources.auth.Database.Users.UserAuthority;
 import com.resources.auth.Database.Users.UserDAO;
+import com.resources.auth.Security.Utils.RandomStringGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -14,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -25,6 +27,8 @@ import java.util.Set;
 @Component
 public class AppInit implements ApplicationListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(AppInit.class);
+
     @EventListener
     public void onApplicationEvent(ApplicationEvent event) {
 
@@ -34,39 +38,33 @@ public class AppInit implements ApplicationListener {
             UserDAO userService = (UserDAO) applicationContext.getBean("userService");
             PasswordEncoder encoder = (PasswordEncoder) applicationContext.getBean("passwordEncoder");
 
-            int length = 12;
-            Random r = new Random();
-            StringBuilder sb = new StringBuilder();
-            String randAlph = "qwertyuiop[]asdfghjklzxcvbnm,./QWERTYUIOP[]ASDFGHJKLZXCVBNM1234567890-!@#$%^&*()";
 
-            for(int i = 0; i < length; i++) {
-                char c = randAlph.charAt(r.nextInt(randAlph.length()));
-                sb.append(c);
-            }
-
-            Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-            authorities.add(new UserAuthority("ROLE_ADMIN"));
-            authorities.add(new UserAuthority("ROLE_USER"));
-            User admin = new User("Admin", encoder.encode(sb.toString()), authorities);
 
             if (!userService.get("Admin").isEmpty()) {
                 return;
             }
+
+            String password = RandomStringGenerator.generateString(12);
+            Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+            authorities.add(new UserAuthority("ROLE_ADMIN"));
+            authorities.add(new UserAuthority("ROLE_USER"));
+            User admin = new User("Admin", encoder.encode(password), authorities);
+
             userService.add(admin);
 
-            broadcastNewUser("Admin", sb.toString());
+            logger.info("CREATED USER {} WITH PASSWORD {}", "Admin", password);
+
+            if (!userService.get("123").isEmpty()) {
+                return;
+            }
 
             Set<GrantedAuthority> userAuthorities = new HashSet<GrantedAuthority>();
             userAuthorities.add(new UserAuthority("ROLE_USER"));
             User user = new User("123", encoder.encode("123"), userAuthorities);
 
-            if (!userService.get("123").isEmpty()) {
-                return;
-            }
             userService.add(user);
 
-            broadcastNewUser("123", "123");
-
+            logger.info("CREATED USER {} WITH PASSWORD {}", "123", "123");
 
             ClientDAO clientService = (ClientDAO) applicationContext.getBean("clientService");
 
@@ -80,14 +78,7 @@ public class AppInit implements ApplicationListener {
             Client robotsDiagram = new Client("robotsDiagram", true, "secret", true, scopes, grantTypes,
                     64000, 64000, true);
             clientService.add(robotsDiagram);
+            logger.info("Initalized");
         }
-    }
-
-    private void broadcastNewUser(String name, String password)
-    {
-        System.out.println("INFOCUSTOM: CREATED USER " + name);
-        System.out.println("INFOCUSTOM: PASSWORD FOR " + name + " is " + password);
-        System.err.println("INFOCUSTOM: CREATED USER " + name);
-        System.err.println("INFOCUSTOM: PASSWORD FOR " + name + " is " + password);
     }
 }

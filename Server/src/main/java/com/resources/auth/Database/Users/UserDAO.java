@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.resources.auth.Security.Utils.RandomStringGenerator;
 import org.apache.commons.pool2.proxy.CglibProxySource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import  org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserDAO {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -45,6 +49,7 @@ public class UserDAO {
     public User get(Integer id) {
         Session session = sessionFactory.getCurrentSession();
         User person = session.get(User.class, id);
+        logger.trace("User {} taken from database using id {}", person.getUsername(), id);
         return person;
     }
 
@@ -57,6 +62,12 @@ public class UserDAO {
         Query query = session.createQuery("FROM User E WHERE E.username = :login");
         query.setParameter("login", login);
         List results = query.list();
+        if (results.isEmpty()) {
+            logger.trace("User {} was not found using login", login);
+        }
+        else {
+            logger.trace("User was taken from database using login {}", login);
+        }
         return results;
     }
 
@@ -71,8 +82,10 @@ public class UserDAO {
         query.setParameter("login", login);
         List<User> results = query.list();
         if (results.size() > 1 || results.size() == 0) {
+            logger.trace("User {} was not found using login", login);
             return null;
         }
+        logger.trace("User {} taken from database using login", login);
         return results.get(0);
     }
 
@@ -83,6 +96,7 @@ public class UserDAO {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("FROM User E");
         List<User> results = query.list();
+        logger.trace("{} users were loaded from database", results.size());
         return results;
     }
 
@@ -95,9 +109,10 @@ public class UserDAO {
         }
         Session session = sessionFactory.getCurrentSession();
         session.save(person);
+        logger.trace("{} user was saved to database", person.getUsername());
     }
 
-    /**
+    /**z
      * Deletes an existing user by id
      */
     public void delete(Integer id) {
@@ -105,6 +120,8 @@ public class UserDAO {
         Session session = sessionFactory.getCurrentSession();
         User person = session.get(User.class, id);
         session.delete(person);
+        logger.trace("{} user with id {} was deleted from database", person.getUsername(), id);
+
     }
 
     /**
@@ -117,6 +134,8 @@ public class UserDAO {
         existingPerson.setPassword(person.getPassword());
         existingPerson.setAuthorities(person.getAuthorities());
         session.save(existingPerson);
+        logger.trace("{} user was edited in database", person.getUsername());
+
     }
 
 }

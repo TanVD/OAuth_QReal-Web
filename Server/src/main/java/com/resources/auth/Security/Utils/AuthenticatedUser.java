@@ -1,4 +1,4 @@
-package com.resources.auth.Security;
+package com.resources.auth.Security.Utils;
 
 import com.resources.auth.Database.Users.User;
 import org.springframework.security.core.GrantedAuthority;

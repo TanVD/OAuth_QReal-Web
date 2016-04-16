@@ -3,13 +3,14 @@ package com.resources.auth.Controllers;
 import com.resources.auth.Database.Client.Client;
 import com.resources.auth.Database.Client.ClientDAO;
 import com.resources.auth.Database.Users.UserDAO;
-import com.resources.auth.Security.AuthenticatedUser;
+import com.resources.auth.Security.Utils.AuthenticatedUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -23,6 +24,8 @@ import java.util.*;
 @Controller
 @RequestMapping("servers")
 public class ClientsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClientsController.class);
 
     @Resource(name = "userService")
     private UserDAO userService;
@@ -60,6 +63,7 @@ public class ClientsController {
         grantTypes.add("authorization_code");
         Client client = new Client(clientId, true, secret, true, scopesSet, grantTypes, 64000, 64000, false);
         clientService.add(client);
+        logger.trace("New client successfully added with client id {}", client.getClientId());
         return "redirect:/servers";
     }
 
@@ -80,6 +84,7 @@ public class ClientsController {
             return "redirect:/servers";
         }
         clientService.edit(client);
+        logger.trace("Client successfully edited with client id {}", client.getClientId());
         return "redirect:/servers";
     }
 
@@ -103,6 +108,7 @@ public class ClientsController {
         modelView.addObject("scopes", scopes);
 
         modelView.addObject("secret", client.getClientSecret());
+        logger.trace("Starting configuring of client with id {}", clientId);
         return modelView;
     }
 }

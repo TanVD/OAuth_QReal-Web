@@ -29,7 +29,7 @@
             </tr>
             <c:forEach var="o" items="${objects}">
             <c:if test="${!o.isAdmin()}">
-            <form class="form-signin" action="grantUserAdminRights/${o.username}" method="post">
+            <form class="form-signin" action="tableRegistered/grantUserAdminRights/${o.username}" method="post">
                 </c:if>
                 <c:if test="${o.isAdmin() && o.username != 'Admin'}">
                 <form class="form-signin" action="withdrawUserAdminRights/${o.username}" method="post">

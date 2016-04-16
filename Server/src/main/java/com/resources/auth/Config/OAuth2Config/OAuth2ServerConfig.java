@@ -20,7 +20,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
@@ -30,9 +29,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.annotation.Resource;
 
-/**
- * @author Rob Winch
- */
+
 @Configuration
 @Import({GoogleConfig.class, GithubConfig.class})
 public class OAuth2ServerConfig {
@@ -42,16 +39,9 @@ public class OAuth2ServerConfig {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-//    private static final String SPARKLR_RESOURCE_ID = "sparklr";
-
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-
-//        @Override
-//        public void configure(ResourceServerSecurityConfigurer resources) {
-//            resources.resourceId(SPARKLR_RESOURCE_ID).stateless(false);
-//        }
 
         @Override
         public void configure(HttpSecurity http) throws Exception {

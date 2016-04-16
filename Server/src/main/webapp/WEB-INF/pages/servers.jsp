@@ -34,7 +34,7 @@
                     <td align="center">${o.clientSecret}</td>
                     <td align="center">${o.scope}</td>
                     <td>
-                        <a href="configureServer/${o.clientId}">
+                        <a href="servers/configureServer/${o.clientId}">
                             <button class="btn btn-default btn-sm" title="Configure">
                                 Configure
                             </button>
