@@ -28,36 +28,36 @@
                 <th>Password</th>
             </tr>
             <c:forEach var="o" items="${objects}">
-            <c:if test="${!o.isAdmin()}">
-            <form class="form-signin" action="tableRegistered/grantUserAdminRights/${o.username}" method="post">
+                <c:if test="${!o.isAdmin()}">
+                <form class="form-signin" action="tableRegistered/grantUserAdminRights/${o.username}" method="post">
                 </c:if>
                 <c:if test="${o.isAdmin() && o.username != 'Admin'}">
                 <form class="form-signin" action="withdrawUserAdminRights/${o.username}" method="post">
+                </c:if>
+                <tr>
+                    <td>${o.username}</td>
+                    <td>${o.password}</td>
+                    <c:if test="${!o.isAdmin()}">
+                        <td>
+                            <button class="btn btn-sm btn-success  btn-block" type="submit">
+                                Grant Admin Rights
+                            </button>
+                        </td>
                     </c:if>
-                    <tr>
-                        <td>${o.username}</td>
-                        <td>${o.password}</td>
-                        <c:if test="${!o.isAdmin()}">
-                            <td>
-                                <button class="btn btn-sm btn-success  btn-block" type="submit">
-                                    Grant Admin Rights
-                                </button>
-                            </td>
-                        </c:if>
-                        <c:if test="${o.isAdmin() && o.username != 'Admin'}">
-                            <td>
-                                <button class="btn btn-sm btn-danger  btn-block" type="submit">
-                                    Withdraw Admin Rights
-                                </button>
-                            </td>
-                        </c:if>
-                        <c:if test="${o.isAdmin() && o.username != 'Admin'}">
-                            <td>
+                    <c:if test="${o.isAdmin() && o.username != 'Admin'}">
+                        <td>
+                            <button class="btn btn-sm btn-danger  btn-block" type="submit">
+                                Withdraw Admin Rights
+                            </button>
+                        </td>
+                    </c:if>
+                    <c:if test="${o.isAdmin() && o.username != 'Admin'}">
+                        <td>
 
-                            </td>
-                        </c:if>
-                    </tr>
-                    <c:if test="${o.username != 'Admin'}">
+                        </td>
+                    </c:if>
+                </tr>
+                <c:if test="${o.username != 'Admin'}">
                 </form>
                 </c:if>
                 </c:forEach>

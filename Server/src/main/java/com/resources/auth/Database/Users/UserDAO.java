@@ -132,7 +132,9 @@ public class UserDAO {
         User existingPerson = session.get(User.class, person.getId());
         existingPerson.setUsername(person.getUsername());
         existingPerson.setPassword(person.getPassword());
-        existingPerson.setAuthorities(person.getAuthorities());
+        //If we delete collection we will create orphan, that's not really good
+        existingPerson.getAuthorities().clear();
+        existingPerson.getAuthorities().addAll(person.getAuthorities());
         session.save(existingPerson);
         logger.trace("{} user was edited in database", person.getUsername());
 

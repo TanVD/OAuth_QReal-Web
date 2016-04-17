@@ -105,9 +105,8 @@ public class User implements Serializable, UserDetails {
     }
 
     public boolean isAdmin() {
-        UserAuthority authorityAdmin = new UserAuthority("ROLE_ADMIN");
-        authorityAdmin.setUser(this);
-        return authorities.contains(authorityAdmin);
+        boolean isAdmin = getAuthoritiesInStringList().contains("ROLE_ADMIN");
+        return isAdmin;
     }
 }
 
