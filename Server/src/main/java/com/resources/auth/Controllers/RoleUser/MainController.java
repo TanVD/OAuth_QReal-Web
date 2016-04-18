@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.RoleUser;
 
 import com.resources.auth.Database.Client.Client;
 import com.resources.auth.Database.Client.ClientDAO;
@@ -17,15 +17,15 @@ import java.util.List;
  * Created by tanvd on 01.12.15.
  */
 @Controller
-public class UserMainController {
+public class MainController {
     @Resource(name="clientService")
     private ClientDAO clientService;
 
-    @RequestMapping(value = "userServers", method = RequestMethod.GET)
+    @RequestMapping(value = "home", method = RequestMethod.GET)
     public ModelAndView tableUsersPrepare(ModelMap model, HttpServletRequest request) {
-        ModelAndView table = new ModelAndView("userServers");
+        ModelAndView table = new ModelAndView("ROLE_USER/mainView");
         List<Client> clientsInBase = clientService.getAll();
-        table.addObject("objects", clientsInBase);
+        table.addObject("clients", clientsInBase);
         table.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return table;
     }

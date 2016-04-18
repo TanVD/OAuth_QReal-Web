@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.OAuth;
 
 /**
  * Created by tanvd on 05.12.15.
@@ -30,9 +30,9 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @SessionAttributes("authorizationRequest")
-public class AccessConfirmationController {
+public class OAuthClientsContoller {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccessConfirmationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuthClientsContoller.class);
 
     @Autowired
     private ClientDetailsService clientDetailsService;
@@ -59,7 +59,7 @@ public class AccessConfirmationController {
         model.put("scopes", scopes);
         logger.trace("User {} authorizing client {} for scopes {}", AuthenticatedUser.getAuthenticatedUserName(),
                 client.getClientId(), client.getScope().toString());
-        return new ModelAndView("access_confirmation", model);
+        return new ModelAndView("OAuth/scopesConfirmation", model);
     }
 
     @RequestMapping("/oauth/error")
@@ -68,7 +68,7 @@ public class AccessConfirmationController {
         // the JSON will already have been rendered.
         model.put("message", "There was a problem with the OAuth2 protocol");
         logger.debug("Some problem with oauth encountered for user {}", AuthenticatedUser.getAuthenticatedUserName());
-        return "oauth_error";
+        return "OAuth/error";
     }
 
     public void setClientDetailsService(ClientDetailsService clientDetailsService) {

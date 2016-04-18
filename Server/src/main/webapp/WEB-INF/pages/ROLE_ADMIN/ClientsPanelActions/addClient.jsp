@@ -6,15 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <jsp:include page="include/head.jsp"/>
+    <jsp:include page="../../include/head.jsp"/>
 
 </head>
 <body>
 
-<jsp:include page="include/navbar.jsp"/>
+<jsp:include page="../../include/navbar.jsp"/>
 
 <!-- panel  -->
-<form role="form" class="col-md-6 col-md-offset-3" action="newServerAdded" method="post">
+<form role="form" class="col-md-6 col-md-offset-3" action="addClient" method="post">
 
     <div  class="panel panel-default ">
         <div align="center" class="panel-body form-horizontal payment-form">
@@ -40,11 +40,11 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-sm-12 text-right">
-                    <label><input type="checkbox" value="autoApprove" id="autoApprove">Auto approve</label>
-                </div>
-            </div>
+            <%--<div class="form-group">--%>
+                <%--<div class="col-sm-12 text-right">--%>
+                    <%--<label><input type="checkbox" value="autoApprove" id="autoApprove">Auto approve</label>--%>
+                <%--</div>--%>
+            <%--</div>--%>
 
             <div class="form-group">
                 <div class="col-sm-12 text-right">

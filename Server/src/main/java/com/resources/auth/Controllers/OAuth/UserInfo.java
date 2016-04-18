@@ -1,7 +1,9 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.OAuth;
 
 import com.resources.auth.Database.Users.User;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,23 +32,26 @@ public class UserInfo {
      */
     @RequestMapping(value = "userInfo", method = RequestMethod.GET)
     @ResponseBody
-    public String tokenString() throws IOException {
+    public String tokenString() throws IOException, JSONException {
 
         User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Collection<String> roles = authenticatedUser.getAuthoritiesInStringList();
 
         String login = authenticatedUser.getUsername();
-        Collection<String> loginCollection = new ArrayList<String>();
-        loginCollection.add(login);
 
 
-        Map<String, Collection<String>> jsonMap = new HashMap<String, Collection<String>>();
+        JSONObject jsonMap = new JSONObject();
         jsonMap.put("roles", roles);
-        jsonMap.put("id", loginCollection);
-        logger.trace("User info was requested of user {} with scopes {}", login, roles.toString());
+        jsonMap.put("id", login);
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(jsonMap);
+        String rolesInString = "";
+        for (String role : roles) {
+            rolesInString += role + " ";
+        }
+        logger.trace("User info was requested of user {} with scopes {}", login, rolesInString);
+
+        String resultString = jsonMap.toString();
+        return resultString;
 
     }
 }

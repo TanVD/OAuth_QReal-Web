@@ -13,7 +13,7 @@
     <title>Registration</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 
-    <jsp:include page="include/head.jsp"/>
+    <jsp:include page="../include/head.jsp"/>
 
 </head>
 
@@ -21,7 +21,7 @@
 <div class="container-fluid">
     <section class="container">
         <div class="container-page">
-            <form class="form-signin" action="registerCheck" method="post">
+            <form class="form-signin" action="register" method="post">
                 <div class="col-md-6">
                     <h3 class="dark-grey">Registration</h3>
 

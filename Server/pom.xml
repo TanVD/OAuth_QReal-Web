@@ -21,6 +21,7 @@
             <url>https://hibernate-sqlite.googlecode.com/svn/trunk/mavenrepo</url>
         </repository>
     </repositories>
+
     <dependencies>
 
 
@@ -214,6 +215,12 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/webapp/properties</directory>
+            </resource>
+        </resources>
 
     </build>
 

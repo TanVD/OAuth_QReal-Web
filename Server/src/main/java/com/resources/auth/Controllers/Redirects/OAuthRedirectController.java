@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.Redirects;
 
 import com.resources.auth.Security.Utils.AuthenticatedUser;
 import org.slf4j.Logger;
@@ -18,9 +18,9 @@ import java.util.Optional;
  */
 @Controller
 @RequestMapping("oauth")
-public class oAuthRedirectController {
+public class OAuthRedirectController {
 
-    private static final Logger logger = LoggerFactory.getLogger(oAuthRedirectController.class);
+    private static final Logger logger = LoggerFactory.getLogger(OAuthRedirectController.class);
 
 
     @RequestMapping(value = {"google"},  method = RequestMethod.GET)
@@ -34,12 +34,12 @@ public class oAuthRedirectController {
         }
         String role = AuthenticatedUser.getAuthenticatedUserAuthority();
         if (role.contains("ROLE_ADMIN")) {
-            logger.trace("Admin {} logged in via google and redirected to tableRegistered", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/tableRegistered";
+            logger.trace("Admin {} logged in via google and redirected to usersPanel", AuthenticatedUser.getAuthenticatedUserName());
+            return "redirect:/usersPanel";
         }
         else if (role.contains("ROLE_USER")) {
             logger.trace("User {} logged in via google and redirected to userServers", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/userServers";
+            return "redirect:/home";
         }
         return "redirect:/";
     }
@@ -55,12 +55,12 @@ public class oAuthRedirectController {
         }
         String role = AuthenticatedUser.getAuthenticatedUserAuthority();
         if (role.contains("ROLE_ADMIN")) {
-            logger.trace("Admin {} logged in via github and redirected to tableRegistered", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/tableRegistered";
+            logger.trace("Admin {} logged in via github and redirected to usersPanel", AuthenticatedUser.getAuthenticatedUserName());
+            return "redirect:/usersPanel";
         }
         else if (role.contains("ROLE_USER")) {
             logger.trace("User {} logged in via github and redirected to userServers", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/userServers";
+            return "redirect:/home";
         }
         return "redirect:/";
     }

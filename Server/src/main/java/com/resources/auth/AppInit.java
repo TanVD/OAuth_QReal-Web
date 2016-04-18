@@ -44,7 +44,8 @@ public class AppInit implements ApplicationListener {
                 return;
             }
 
-            String password = RandomStringGenerator.generateString(12);
+            //String password = RandomStringGenerator.generateString(12);
+            String password = "Admin";
             Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
             authorities.add(new UserAuthority("ROLE_ADMIN"));
             authorities.add(new UserAuthority("ROLE_USER"));

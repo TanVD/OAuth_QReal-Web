@@ -7,15 +7,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <jsp:include page="include/head.jsp"/>
+  <jsp:include page="../../include/head.jsp"/>
 
 </head>
 <body>
 
-<jsp:include page="include/navbar.jsp"/>
+<jsp:include page="../../include/navbar.jsp"/>
 
 <!-- panel  -->
-<form role="form" class="col-md-6 col-md-offset-3" action="serverConfigured" method="post">
+<form role="form" class="col-md-6 col-md-offset-3" action="../configureClient" method="post">
 
   <div  class="panel panel-default ">
     <div align="center" class="panel-body form-horizontal payment-form">

@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.RoleAnonymous;
 
 /**
  * Created by tanvd on 07.11.15.
@@ -38,10 +38,10 @@ public class RegisterController {
     @RequestMapping(value = "register", method = RequestMethod.GET)
     public String login(ModelMap model) {
         model.addAttribute("error", false);
-        return "register";
+        return "ROLE_ANONYMOUS/registerView";
     }
 
-    @RequestMapping(value = "registerCheck", method = RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     public String registerCheck(ModelMap model, HttpServletRequest request) throws IOException{
         String name = request.getParameter("login");
         String pwd1 = request.getParameter("pwd1");
@@ -51,14 +51,14 @@ public class RegisterController {
 
         if (!pwd1.equals(pwd2)) {
             model.addAttribute("errorPasswordsNotMatch", true);
-            return "register";
+            return "ROLE_ANONYMOUS/registerView";
         }
 
         List userWithSameLogin = userService.get(name);
         if (!userWithSameLogin.isEmpty())
         {
             model.addAttribute("errorLoginAlreadyRegistered", true);
-            return "register";
+            return "ROLE_ANONYMOUS/register";
         }
 
         User user = new User(name, passwordEncoder.encode(pwd1), authorities);

@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.Redirects;
 
 import com.resources.auth.Security.Utils.AuthenticatedUser;
 import org.slf4j.Logger;
@@ -21,11 +21,11 @@ public class RouteRoleController {
         String role = AuthenticatedUser.getAuthenticatedUserAuthority();
         if (role.contains("ROLE_ADMIN")) {
             logger.trace("Admin {} routed to the main page for role", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/tableRegistered";
+            return "redirect:/clientsPanel";
         }
         else if (role.contains("ROLE_USER")) {
             logger.trace("User {} routed to the main page for role", AuthenticatedUser.getAuthenticatedUserName());
-            return "redirect:/userServers";
+            return "redirect:/home";
         }
         return "redirect:/";
     }

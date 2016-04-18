@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.RoleAnonymous;
 
 /**
  * Created by tanvd on 06.11.15.
@@ -13,17 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 
 @Controller
@@ -58,12 +54,12 @@ public class LoginController {
         }
 
         model.addAttribute("error", false);
-        return "login";
+        return "ROLE_ANONYMOUS/loginView";
     }
 
     @RequestMapping(value = "/logErr", method = RequestMethod.GET)
     public String loginError(ModelMap model) {
         model.addAttribute("error", true);
-        return "login";
+        return "ROLE_ANONYMOUS/loginView";
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,8 +15,11 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.annotation.Resource;
@@ -61,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
                 .requestMatchers()
-                .antMatchers("/*", "/tableRegistered**", "/servers/**", "/register/**", "/resources/**", "/oauth/authorize")
+                .antMatchers("/*", "/usersPanel/**", "/clientsPanel/**", "/register/**", "/resources/**", "/oauth/authorize")
                 .and()
 
                 .exceptionHandling()
@@ -74,12 +78,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/oauth/authorize", "/userServers")
+                .antMatchers("/oauth/authorize", "/home")
                 .hasRole("USER")
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/tableRegistered/**", "/servers/**")
+                .antMatchers("/usersPanel/**", "/clientsPanel/**")
                 .hasRole("ADMIN")
                 .and()
 
@@ -87,6 +91,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/log", "/logErr", "/register**")
                 .permitAll()
                 .and()
+
+
 
                 // TODO: put CSRF protection back into this endpoint
                 .csrf()
@@ -110,6 +116,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public TokenStore tokenStore() {
         return new InMemoryTokenStore();
+    }
+
+    //Needed for possible use of hasRole in jsp
+    @Bean(name = "webSecurityExpressionHandler")
+    public SecurityExpressionHandler<FilterInvocation> createWebExpressionHandlerOAuth() {
+        return new OAuth2WebSecurityExpressionHandler();
     }
 
 }

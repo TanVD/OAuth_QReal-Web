@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.RoleAdmin;
 
 import com.resources.auth.Database.Client.Client;
 import com.resources.auth.Database.Client.ClientDAO;
@@ -16,16 +16,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
  * Created by tanvd on 30.11.15.
  */
 @Controller
-@RequestMapping("servers")
-public class ClientsController {
+@RequestMapping("clientsPanel")
+public class ClientsPanelController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientsPanelController.class);
 
     @Resource(name = "userService")
     private UserDAO userService;
@@ -34,22 +37,27 @@ public class ClientsController {
     private ClientDAO clientService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView tableServersPrepare(ModelMap model, HttpServletRequest request) {
-        ModelAndView table = new ModelAndView("servers");
+    public ModelAndView tableServersPrepare(ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
+        ModelAndView table = new ModelAndView("ROLE_ADMIN/clientsPanel");
         List<Client> clientsInBase = clientService.getAll();
-        table.addObject("objects", clientsInBase);
+        table.addObject("clients", clientsInBase);
+        List<String> clientsEncoded = new ArrayList<String>();
+        for (Client client : clientsInBase) {
+            clientsEncoded.add(URLEncoder.encode(client.getClientId(), "UTF-8"));
+        }
+        table.addObject("clientsEncoded", clientsEncoded);
         table.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return table;
     }
 
-    @RequestMapping(value = "addNewServer", method = RequestMethod.GET)
+    @RequestMapping(value = "addClient", method = RequestMethod.GET)
     public ModelAndView addServer(ModelMap model, HttpServletRequest request) throws IOException{
-        ModelAndView modelView = new ModelAndView("addServer");
+        ModelAndView modelView = new ModelAndView("ROLE_ADMIN/ClientsPanelActions/addClient");
         modelView.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return modelView;
     }
 
-    @RequestMapping(value = "newServerAdded", method = RequestMethod.POST)
+    @RequestMapping(value = "addClient", method = RequestMethod.POST)
     public String serverCheck(ModelMap model, HttpServletRequest request) throws IOException{
         String clientId = request.getParameter("clientId");
         String scopes = request.getParameter("scopes");
@@ -64,10 +72,10 @@ public class ClientsController {
         Client client = new Client(clientId, true, secret, true, scopesSet, grantTypes, 64000, 64000, false);
         clientService.add(client);
         logger.trace("New client successfully added with client id {}", client.getClientId());
-        return "redirect:/servers";
+        return "redirect:/clientsPanel";
     }
 
-    @RequestMapping(value = "configureServer/serverConfigured", method = RequestMethod.POST)
+    @RequestMapping(value = "configureClient", method = RequestMethod.POST)
     public String serverConfigureSave(ModelMap model, HttpServletRequest request) throws IOException {
         String clientId = request.getParameter("clientId");
         String scopes = request.getParameter("scopes");
@@ -81,17 +89,18 @@ public class ClientsController {
 
         client.setClientSecret(secret);
         if (clients.isEmpty()) {
-            return "redirect:/servers";
+            return "redirect:/clientsPanel";
         }
         clientService.edit(client);
         logger.trace("Client successfully edited with client id {}", client.getClientId());
-        return "redirect:/servers";
+        return "redirect:/clientsPanel";
     }
 
-    @RequestMapping(value = "configureServer/{clientId:.+}", method = RequestMethod.GET)//need :.+ because of truncating the extension by default
-    public ModelAndView configureServer(@PathVariable String clientId, ModelMap model, HttpServletRequest request){
+    @RequestMapping(value = "configureClient/{clientIdEncoded:.+}", method = RequestMethod.GET)//need :.+ because of truncating the extension by default
+    public ModelAndView configureServer(@PathVariable("clientIdEncoded") String clientIdEncoded, ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
+        String clientId = URLDecoder.decode(clientIdEncoded, "UTF-8");
         List<Client> clients = clientService.get(clientId);
-        ModelAndView modelView = new ModelAndView("configureServer");
+        ModelAndView modelView = new ModelAndView("ROLE_ADMIN/ClientsPanelActions/configureClient");
         if (clients.isEmpty())
         {
             return modelView;
@@ -108,6 +117,7 @@ public class ClientsController {
         modelView.addObject("scopes", scopes);
 
         modelView.addObject("secret", client.getClientSecret());
+
         logger.trace("Starting configuring of client with id {}", clientId);
         return modelView;
     }

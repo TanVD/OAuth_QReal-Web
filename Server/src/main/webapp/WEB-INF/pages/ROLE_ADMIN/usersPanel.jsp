@@ -12,27 +12,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <jsp:include page="include/head.jsp"/>
+    <jsp:include page="../include/head.jsp"/>
 
 </head>
 
 <body>
 
-<jsp:include page="include/navbar.jsp"/>
+<jsp:include page="../include/navbar.jsp"/>
 
 <div class="container">
-    <c:if test="${not empty objects}">
+    <c:if test="${not empty users}">
         <table class="table">
             <tr>
                 <th>Login</th>
                 <th>Password</th>
             </tr>
-            <c:forEach var="o" items="${objects}">
+            <c:forEach var="o" items="${users}" varStatus="status">
                 <c:if test="${!o.isAdmin()}">
-                <form class="form-signin" action="tableRegistered/grantUserAdminRights/${o.username}" method="post">
+                <form class="form-signin" action="usersPanel/grantUserAdminRights/${usersEncoded[status.index]}" method="post">
                 </c:if>
                 <c:if test="${o.isAdmin() && o.username != 'Admin'}">
-                <form class="form-signin" action="withdrawUserAdminRights/${o.username}" method="post">
+                <form class="form-signin" action="usersPanel/withdrawUserAdminRights/${usersEncoded[status.index]}" method="post">
                 </c:if>
                 <tr>
                     <td>${o.username}</td>

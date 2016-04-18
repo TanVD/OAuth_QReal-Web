@@ -8,7 +8,7 @@
     <link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet">
     <link href="<c:url value="/resources/css/bootstrap-social.css" />" rel="stylesheet">
 
-    <jsp:include page="include/head.jsp"/>
+    <jsp:include page="../include/head.jsp"/>
 
 </head>
 

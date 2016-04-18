@@ -1,4 +1,4 @@
-package com.resources.auth.Controllers;
+package com.resources.auth.Controllers.RoleAdmin;
 
 import com.resources.auth.Database.Users.User;
 import com.resources.auth.Database.Users.UserAuthority;
@@ -16,6 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,30 +28,31 @@ import java.util.Set;
  * Created by tanvd on 08.11.15.
  */
 @Controller
-@RequestMapping("tableRegistered")
-public class UsersController {
+@RequestMapping("usersPanel")
+public class UsersPanelController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsersPanelController.class);
 
     @Resource(name="userService")
     private UserDAO userService;
 
-    private ModelAndView prepareTableRegistered()
-    {
-        ModelAndView table = new ModelAndView("tableRegistered");
-        List<User> result = userService.getAll();
-        table.addObject("objects", result);
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ModelAndView tableUsersPrepare(ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
+        ModelAndView table = new ModelAndView("ROLE_ADMIN/usersPanel");
+        List<User> users = userService.getAll();
+        table.addObject("users", users);
+        List<String> usersEncoded = new ArrayList<String>();
+        for (User user : users) {
+            usersEncoded.add(URLEncoder.encode(user.getUsername(), "UTF-8"));
+        }
+        table.addObject("usersEncoded", usersEncoded);
         table.addObject("name", AuthenticatedUser.getAuthenticatedUserName());
         return table;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView tableUsersPrepare(ModelMap model, HttpServletRequest request) {
-        return prepareTableRegistered();
-    }
-
-    @RequestMapping(value = "grantUserAdminRights/{name}", method = RequestMethod.POST)
-    public String tableUsersGrantAdmin(@PathVariable("name") String name) {
+    @RequestMapping(value = "grantUserAdminRights/{nameEncoded:.+}", method = RequestMethod.POST)
+    public String tableUsersGrantAdmin(@PathVariable("nameEncoded") String nameEncoded) throws UnsupportedEncodingException {
+        String name = URLDecoder.decode(nameEncoded, "UTF-8");
         List<User> usersList = userService.get(name);
         User user = usersList.get(0);
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
@@ -56,11 +61,12 @@ public class UsersController {
         user.setAuthorities(authorities);
         userService.edit(user);
         logger.trace("User {} now has admin rights", user.getId());
-        return "redirect:/tableRegistered";
+        return "redirect:/usersPanel";
     }
 
-    @RequestMapping(value = "withdrawUserAdminRights/{name}", method = RequestMethod.POST)
-    public String tableUsersWithdrawAdmin(@PathVariable("name") String name) {
+    @RequestMapping(value = "withdrawUserAdminRights/{nameEncoded:.+}", method = RequestMethod.POST)
+    public String tableUsersWithdrawAdmin(@PathVariable("nameEncoded") String nameEncoded) throws UnsupportedEncodingException {
+        String name = URLDecoder.decode(nameEncoded, "UTF-8");
         List<User> usersList = userService.get(name);
         User user = usersList.get(0);
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
@@ -68,6 +74,6 @@ public class UsersController {
         user.setAuthorities(authorities);
         userService.edit(user);
         logger.trace("Admin {} lost admin rights", user.getId());
-        return "redirect:/tableRegistered";
+        return "redirect:/usersPanel";
     }
 }

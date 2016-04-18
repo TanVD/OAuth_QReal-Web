@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>OAuth server</title>
 
-  <jsp:include page="include/head.jsp"/>
+  <jsp:include page="../include/head.jsp"/>
 
 </head>
 
